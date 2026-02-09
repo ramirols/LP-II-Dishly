@@ -1,0 +1,5 @@
+package com.dishly.app.service;
+
+public class CategoriaService {
+
+}

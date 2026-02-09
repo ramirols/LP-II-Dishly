@@ -1,0 +1,5 @@
+package com.dishly.app.model;
+
+public class Plato {
+
+}
