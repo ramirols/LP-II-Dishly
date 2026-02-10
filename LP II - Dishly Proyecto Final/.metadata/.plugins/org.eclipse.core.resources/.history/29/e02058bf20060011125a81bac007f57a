@@ -1,0 +1,4 @@
+function toggleCart() {
+    const cart = document.getElementById('cartSidebar');
+    cart.classList.toggle('translate-x-full');
+}

@@ -1,0 +1,13 @@
+function toggleCart() {
+    const cart = document.getElementById('cartSidebar');
+    cart.classList.toggle('translate-x-full');
+}
+
+document.addEventListener('click', function(e) {
+    const cart = document.getElementById('cartSidebar');
+    const isButton = e.target.closest('button');
+
+    if (!cart.contains(e.target) && !isButton) {
+        cart.classList.add('translate-x-full');
+    }
+});

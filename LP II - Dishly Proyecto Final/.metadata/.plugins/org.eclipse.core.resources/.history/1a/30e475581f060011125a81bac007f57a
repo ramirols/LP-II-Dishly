@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(content)">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Disly</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+	<div class="flex flex-col min-h-[100dvh]">
+			<header class="bg-white shadow">
+			    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+			       <!-- LOGO -->
+			       <div class="flex items-center gap-2">
+			           <span class="font-bold text-xl">Disly</span>
+			       </div>
+
+			       <!-- NAV -->
+			       <nav class="flex items-center gap-6">
+			           <a th:href="@{/}" class="hover:text-blue-600">Home</a>
+			           <a th:href="@{/menu}" class="hover:text-blue-600">Menú</a>
+
+			           <!-- CARRITO -->
+			           <div class="relative">
+			               <a th:href="@{/cliente/carrito}" class="flex items-center gap-1">
+			                   🛒
+			                   <span class="text-sm bg-red-500 text-white rounded-full px-2"
+			                         th:text="${cartCount != null ? cartCount : 0}">
+			                       0
+			                   </span>
+			               </a>
+			               <span class="text-sm text-gray-600 ml-1"
+			                     th:text="${cartTotal != null ? 'S/ ' + cartTotal : 'S/ 0.00'}">
+			                   S/ 0.00
+			               </span>
+			           </div>
+
+			            <!-- USUARIO -->
+						<div class="relative group">
+
+						    <button class="flex items-center gap-1">
+						        👤
+						    </button>
+
+						    <div
+						        class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-md
+						               hidden group-hover:block z-50">
+
+						        <!-- NO LOGUEADO -->
+						        <div th:if="${#authentication == null or !#authentication.authenticated}">
+						            <a th:href="@{/login}" class="block px-4 py-2 hover:bg-gray-100">Iniciar sesión</a>
+						            <a th:href="@{/register}" class="block px-4 py-2 hover:bg-gray-100">Registrarse</a>
+						        </div>
+
+						        <!-- CLIENTE -->
+						        <div th:if="${#authorization.expression('hasRole(''CLIENTE'')')}">
+						            <a th:href="@{/cliente/pedidos}" class="block px-4 py-2 hover:bg-gray-100">Mis pedidos</a>
+						            <a th:href="@{/cliente/perfil}" class="block px-4 py-2 hover:bg-gray-100">Perfil</a>
+						            <a th:href="@{/logout}" class="block px-4 py-2 hover:bg-gray-100 text-red-600">Cerrar sesión</a>
+						        </div>
+
+						        <!-- ADMIN / STAFF -->
+						        <div th:if="${#authorization.expression('hasAnyRole(''ADMIN'',''STAFF'')')}">
+						            <a th:href="@{/admin/dashboard}" class="block px-4 py-2 hover:bg-gray-100">Dashboard</a>
+						            <a th:href="@{/perfil}" class="block px-4 py-2 hover:bg-gray-100">Perfil</a>
+						            <a th:href="@{/logout}" class="block px-4 py-2 hover:bg-gray-100 text-red-600">Cerrar sesión</a>
+						        </div>
+
+						    </div>
+						</div>
+			       </nav>
+			   </div>
+		</header>
+
+		<main class="container mx-auto flex-1">
+		    <div th:replace="${content}"></div>
+		</main>
+		
+		<footer class="bg-gray-800 text-gray-200 mt-12">
+		    <div class="container mx-auto px-6 py-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+
+		        <div>
+		            <h3 class="font-bold mb-2">Disly</h3>
+		            <p class="text-sm">
+		                Plataforma web de pedidos para restaurante.
+		                Delivery y consumo en local.
+		            </p>
+		        </div>
+
+		        <div>
+		            <h3 class="font-bold mb-2">Enlaces</h3>
+		            <ul class="text-sm space-y-1">
+		                <li><a th:href="@{/}" class="hover:underline">Home</a></li>
+		                <li><a th:href="@{/menu}" class="hover:underline">Menú</a></li>
+		                <li><a th:href="@{/login}" class="hover:underline">Login</a></li>
+		            </ul>
+		        </div>
+
+		        <div>
+		            <h3 class="font-bold mb-2">Contacto</h3>
+		            <p class="text-sm">📍 Lima, Perú</p>
+		            <p class="text-sm">📞 +51 999 999 999</p>
+		            <p class="text-sm">✉ contacto@disly.pe</p>
+		        </div>
+		    </div>
+
+		    <div class="text-center text-sm bg-gray-900 py-3">
+		        © 2026 Disly – Proyecto Académico
+		    </div>
+		</footer>
+	</div>
+</body>
+</html>
