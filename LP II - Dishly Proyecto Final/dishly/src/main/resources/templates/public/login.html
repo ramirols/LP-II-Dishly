@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="layout/main :: layout(~{::section})">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
 
+<main layout:fragment="content">
 <section class="flex items-center justify-center min-h-[64vh]">
     <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
 
@@ -78,5 +80,5 @@
 
     </div>
 </section>
-
+</main>
 </html>

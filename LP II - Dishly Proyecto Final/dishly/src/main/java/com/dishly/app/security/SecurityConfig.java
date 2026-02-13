@@ -7,47 +7,57 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .authorizeHttpRequests(auth -> auth
-                // 🔓 RECURSOS ESTÁTICOS
-                .requestMatchers(
-                    "/css/**",
-                    "/js/**",
-                    "/images/**",
-                    "/webjars/**"
-                ).permitAll()
-
-                // 🔓 PÁGINAS PÚBLICAS
-                .requestMatchers(
-                    "/",
-                    "/menu",
-                    "/login",
-                    "/register",
-                    "/checkout"
-                ).permitAll()
-
-                // 🔐 TODO LO DEMÁS
-                .anyRequest().authenticated()
-            )
-            .formLogin(form -> form
-            	    .loginPage("/login")
-            	    .defaultSuccessUrl("/", true)
-            	    .permitAll()
-            )
-            .logout(logout -> logout.permitAll());
-
-        return http.build();
+    public SecurityConfig() {
     }
-    
+
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+   SecurityFilterChain securityFilterChain(HttpSecurity http){
+        return http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(authRequest ->
+                        authRequest
+                                .requestMatchers(
+                                        "/**",
+                                        "/auth/login/**",
+                                        "/auth/register",
+                                        "/nosotros",
+                                        "/programas",
+                                        "/soporte",
+                                        "/js/**"
+                ).permitAll()
+
+                                .requestMatchers("/admin/**")
+                                .hasRole("ADMIN")
+
+                                .requestMatchers("/usuario/**")
+                                .hasAnyRole("ADMIN", "CLIENTE")
+
+                .anyRequest().authenticated())
+
+                .formLogin(form -> form
+                        .loginProcessingUrl("/login")
+                        .usernameParameter("email")
+                        .passwordParameter("contrasenia")
+                        .defaultSuccessUrl("/", true)
+                        .failureUrl("/?error=true")
+                        .permitAll()
+                )
+
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/programas"))
+                )
+
+                .build();
     }
 }

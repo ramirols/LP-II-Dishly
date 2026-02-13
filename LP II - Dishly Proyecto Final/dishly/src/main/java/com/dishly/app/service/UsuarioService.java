@@ -24,10 +24,10 @@ public class UsuarioService {
         }
 
         Usuario u = new Usuario();
-        u.setName(name);
+        u.setNombre(name);
         u.setEmail(email);
-        u.setPassword(passwordEncoder.encode(password));
-        u.setRol("CLIENTE");
+        u.setContrasenia(passwordEncoder.encode(password));
+        //u.setRol("CLIENTE");
         u.setEstado(true);
 
         usuarioRepository.save(u);
