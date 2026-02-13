@@ -10,6 +10,6 @@ public class CarritoItem {
     private int cantidad;
 
     public double getSubtotal() {
-        return plato.getPrecio() * cantidad;
+        return plato.getPrecio().doubleValue() * cantidad;
     }
 }

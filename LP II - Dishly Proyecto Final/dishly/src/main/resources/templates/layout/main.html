@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:fragment="layout(content)">
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -119,7 +119,7 @@
 		    </div>
 
 		    <div class="p-4 space-y-4">
-		        <div th:each="item : ${cartItems}">
+		        <div th:each="item : ${cartItems ?: {}}">>
 		            <p class="font-semibold" th:text="${item.plato.nombre}"></p>
 		            <p class="text-sm text-gray-600">
 		                Cant: <span th:text="${item.cantidad}"></span>
@@ -140,8 +140,8 @@
 		    </div>
 		</div>
 		
-		<main class="flex-1 pt-[80px]">
-			<div th:replace="~{${content}}"></div>
+		<main layout:fragment="content" class="flex-1 pt-[80px]">
+			
 		</main>
 		
 		<footer class="bg-gray-800 text-gray-200 mt-12">

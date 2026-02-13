@@ -14,7 +14,12 @@ public class PublicController {
     public PublicController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
-
+    
+    @GetMapping("/test-layout")
+    public String test() {
+        return "layout/main";
+    }
+    
     @GetMapping("/")
     public String home() {
         return "public/home";
