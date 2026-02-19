@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+
+<main layout:fragment="content">
+
+	<!-- HERO SLIDER -->
+	<section class="relative">
+	  <div class="swiper heroSwiper h-[85vh] cursor-pointer">
+
+	    <div class="swiper-wrapper">
+
+	      <!-- Slide 1 -->
+	      <div
+	        class="swiper-slide relative flex items-center justify-center text-center bg-cover bg-center"
+	        style="background-image: url('/images/restaurant-1.jpg');"
+	      >
+	        <!-- Overlay --> 
+	        <div class="absolute inset-0 bg-gradient-to-b from-[#2563eb]/60 via-[#2563eb]/50 to-[#2563eb]/70"></div>
+
+	        <div class="relative z-10 max-w-3xl px-6">
+	          <span class="inline-flex items-center gap-2 bg-blue-500 text-white px-4 py-1 rounded-full text-sm mb-6">
+	            🍽️ Restaurante digital
+	          </span>
+
+	          <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
+	            Ordena sin colas,<br />
+	            directo desde tu mesa
+	          </h1>
+
+	          <p class="text-gray-200 max-w-xl mx-auto mb-8 text-lg">
+	            Escanea el QR, explora el menú y realiza tu pedido sin esperar a un mozo.
+	          </p>
+
+	          <!-- Badges -->
+	          <div class="flex flex-wrap justify-center gap-3 mb-8">
+	            <span class="bg-white/10 text-white px-4 py-2 rounded-lg text-sm">
+	              📱 100% móvil
+	            </span>
+	            <span class="bg-white/10 text-white px-4 py-2 rounded-lg text-sm">
+	              ⚡ Pedido rápido
+	            </span>
+	            <span class="bg-white/10 text-white px-4 py-2 rounded-lg text-sm">
+	              💳 Pago integrado
+	            </span>
+	          </div>
+
+	          <button class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition">
+	            Ver cómo funciona
+	          </button>
+	        </div>
+	      </div>
+
+	      <!-- Slide 2 -->
+	      <div
+	        class="swiper-slide relative flex items-center justify-center text-center bg-cover bg-center"
+	        style="background-image: url('/images/restaurant-2.jpg');"
+	      >
+	        <div class="absolute inset-0 bg-gradient-to-b from-[#2563eb]/60 via-[#2563eb]/50 to-[#2563eb]/70"></div>
+
+	        <div class="relative z-10 max-w-3xl px-6">
+	          <span class="inline-flex items-center gap-2 bg-green-500 text-white px-4 py-1 rounded-full text-sm mb-6">
+	            ⚡ Rápido y simple
+	          </span>
+
+	          <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-6">
+	            Todo desde<br />tu celular
+	          </h1>
+
+	          <p class="text-gray-200 max-w-xl mx-auto mb-8 text-lg">
+	            Categorías claras, platos destacados y carrito en tiempo real.
+	          </p>
+
+	          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-white">
+	            <div class="bg-white/10 rounded-xl p-4">
+	              📋 Menú digital
+	            </div>
+	            <div class="bg-white/10 rounded-xl p-4">
+	              🛒 Carrito inteligente
+	            </div>
+	            <div class="bg-white/10 rounded-xl p-4">
+	              🔔 Pedido en cocina
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+
+	      <!-- Slide 3 -->
+	      <div
+	        class="swiper-slide relative flex items-center justify-center text-center bg-cover bg-center"
+	        style="background-image: url('/images/restaurant-3.jpg');"
+	      >
+	        <div class="absolute inset-0 bg-gradient-to-b from-[#2563eb]/60 via-[#2563eb]/50 to-[#2563eb]/70"></div>
+
+	        <div class="relative z-10 max-w-3xl px-6">
+	          <span class="inline-flex items-center gap-2 bg-purple-500 text-white px-4 py-1 rounded-full text-sm mb-6">
+	            📦 Flexible
+	          </span>
+
+	          <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-6">
+	            Delivery o<br />consumo en local
+	          </h1>
+
+	          <p class="text-gray-200 max-w-xl mx-auto mb-8 text-lg">
+	            Tú decides cómo disfrutar tu pedido, sin fricciones.
+	          </p>
+
+	          <div class="flex justify-center gap-6 text-white">
+	            <span class="bg-white/10 px-5 py-3 rounded-xl">
+	              🏠 En mesa
+	            </span>
+	            <span class="bg-white/10 px-5 py-3 rounded-xl">
+	              🛵 Delivery
+	            </span>
+	          </div>
+	        </div>
+	      </div>
+
+	    </div>
+
+	    <!-- Pagination -->
+	    <div class="swiper-pagination"></div>
+	  </div>
+	</section>
+
+	<!-- SECCION DE CATEGORIAS -->
+	<section class="py-24 bg-gray-50">
+	  <div class="container mx-auto px-4">
+
+	    <div class="text-center mb-14">
+	      <span class="inline-block mb-3 text-xs font-semibold tracking-wide text-blue-600 bg-blue-100 px-4 py-1 rounded-full">
+	        Explora
+	      </span>
+	      <h2 class="text-3xl md:text-4xl font-bold">
+	        Categorías del menú
+	      </h2>
+	      <p class="text-gray-600 mt-3">
+	        Encuentra tus platos favoritos en segundos
+	      </p>
+	    </div>
+
+	    <div class="swiper categorySwiper">
+	      <div class="swiper-wrapper">
+
+	        <div class="swiper-slide">
+	          <a href="#"
+	             class="group block bg-white p-6 rounded-2xl border hover:border-blue-500 hover:shadow-lg transition text-center">
+	            <div class="text-3xl mb-3">🍝</div>
+	            <h3 class="font-semibold text-lg mb-1 group-hover:text-blue-600 transition">
+	              Pastas
+	            </h3>
+	            <span class="inline-block text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+	              12 opciones
+	            </span>
+	          </a>
+	        </div>
+
+	      </div>
+	    </div>
+
+	  </div>
+	</section>
+
+  <!-- PLATOS DESTACADOS -->
+  <section class="py-24 bg-white">
+    <div class="container mx-auto px-4">
+
+      <div class="text-center mb-14">
+        <span class="inline-block mb-3 text-xs font-semibold text-orange-600 bg-orange-100 px-4 py-1 rounded-full">
+          Recomendados
+        </span>
+        <h2 class="text-3xl md:text-4xl font-bold">
+          Platos destacados
+        </h2>
+        <p class="text-gray-600 mt-3">
+          Los favoritos de nuestros clientes
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+
+        <div class="group border rounded-2xl overflow-hidden hover:shadow-xl transition">
+          <div class="relative">
+            <img src="/images/demo.jpg" class="w-full h-52 object-cover">
+            <span class="absolute top-3 left-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+              🔥 Top
+            </span>
+          </div>
+
+          <div class="p-5">
+            <h3 class="font-semibold text-lg mb-1">
+              Lomo saltado
+            </h3>
+
+            <p class="text-gray-500 text-sm mb-4">
+              Clásico peruano con papas crocantes
+            </p>
+
+            <div class="flex justify-between items-center">
+              <span class="text-lg font-bold text-blue-600">
+                S/ 25.00
+              </span>
+
+              <a href="#" class="text-sm font-semibold text-blue-600 hover:underline">
+                Ver detalle →
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CÓMO FUNCIONA -->
+  <section class="py-24 bg-gray-50">
+    <div class="container mx-auto px-4 text-center">
+
+      <span class="inline-block mb-3 text-xs font-semibold text-green-600 bg-green-100 px-4 py-1 rounded-full">
+        Fácil
+      </span>
+
+      <h2 class="text-3xl md:text-4xl font-bold mb-14">
+        ¿Cómo funciona?
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+        <div class="bg-white p-8 rounded-2xl shadow-sm">
+          <div class="text-4xl mb-4">🔍</div>
+          <h3 class="font-semibold mb-2">Explora</h3>
+          <p class="text-gray-600 text-sm">
+            Navega por categorías y descubre nuevos sabores.
+          </p>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-sm">
+          <div class="text-4xl mb-4">🛒</div>
+          <h3 class="font-semibold mb-2">Elige</h3>
+          <p class="text-gray-600 text-sm">
+            Agrega tus platos favoritos al carrito.
+          </p>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-sm">
+          <div class="text-4xl mb-4">📦</div>
+          <h3 class="font-semibold mb-2">Ordena</h3>
+          <p class="text-gray-600 text-sm">
+            Confirma y sigue tu pedido en tiempo real.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFICIOS -->
+  <section class="py-24 bg-white">
+    <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+
+      <div>
+        <span class="inline-block mb-3 text-xs font-semibold bg-gray-100 px-3 py-1 rounded-full">
+          🚀 Velocidad
+        </span>
+        <h3 class="font-bold text-xl mb-2">Rápido</h3>
+        <p class="text-gray-600 text-sm">
+          Ordena sin filas ni esperas.
+        </p>
+      </div>
+
+      <div>
+        <span class="inline-block mb-3 text-xs font-semibold bg-gray-100 px-3 py-1 rounded-full">
+          📱 Digital
+        </span>
+        <h3 class="font-bold text-xl mb-2">100% Online</h3>
+        <p class="text-gray-600 text-sm">
+          Todo desde tu celular o computadora.
+        </p>
+      </div>
+
+      <div>
+        <span class="inline-block mb-3 text-xs font-semibold bg-gray-100 px-3 py-1 rounded-full">
+          📦 Flexible
+        </span>
+        <h3 class="font-bold text-xl mb-2">A tu manera</h3>
+        <p class="text-gray-600 text-sm">
+          Delivery o consumo en local.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TESTIMONIO -->
+  <section class="py-24 bg-gray-50 text-center">
+    <div class="container mx-auto px-4 max-w-2xl">
+
+      <span class="inline-block mb-4 text-xs font-semibold text-purple-600 bg-purple-100 px-4 py-1 rounded-full">
+        Opiniones reales
+      </span>
+
+      <p class="text-xl italic text-gray-700 mb-6">
+        “Pedir comida nunca fue tan fácil y rápido”
+      </p>
+
+      <span class="text-sm text-gray-500">
+        — Cliente frecuente ⭐⭐⭐⭐⭐
+      </span>
+
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 bg-blue-600 text-white text-center">
+    <h3 class="text-4xl font-bold mb-6">
+      ¿Listo para ordenar?
+    </h3>
+
+    <a th:href="@{/register}"
+       class="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold">
+      Crear cuenta
+    </a>
+  </section>
+</main>
+</html>

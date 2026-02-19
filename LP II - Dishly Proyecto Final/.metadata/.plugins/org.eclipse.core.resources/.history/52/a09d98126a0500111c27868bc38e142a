@@ -1,8 +1,0 @@
-package com.dishly.app.model;
-
-import jakarta.persistence.Entity;
-
-@Entity
-public class Rol {
-
-}

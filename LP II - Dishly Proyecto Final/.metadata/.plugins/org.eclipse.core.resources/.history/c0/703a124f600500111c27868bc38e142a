@@ -1,6 +1,0 @@
-package com.dishly.app.service;
-
-@Service
-public class CategoriaService {
-
-}

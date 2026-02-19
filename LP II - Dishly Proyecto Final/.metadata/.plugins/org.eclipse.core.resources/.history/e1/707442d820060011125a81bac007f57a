@@ -1,6 +1,0 @@
-document.addEventListener('click', function(e) {
-    const cart = document.getElementById('cartSidebar');
-    if (!cart.contains(e.target) && !e.target.closest('button')) {
-        cart.classList.add('translate-x-full');
-    }
-});

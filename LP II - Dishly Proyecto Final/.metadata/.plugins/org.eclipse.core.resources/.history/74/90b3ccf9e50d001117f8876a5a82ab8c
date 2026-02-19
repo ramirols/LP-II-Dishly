@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Disly</title>
+
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+	<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+</head>
+
+<body class="bg-gray-100">
+	<div class="flex flex-col min-h-[100dvh]">
+			<header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.06)] border-b border-white/20">
+			    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+			       <!-- LOGO -->
+			       <div class="flex items-center gap-2">
+			           <span class="font-bold text-xl">Disly</span>
+			       </div>
+
+			       <!-- NAV -->
+			       <nav class="flex items-center gap-6">
+			           <a th:href="@{/}" class="hover:text-blue-600">Home</a>
+			           <a th:href="@{/menu}" class="hover:text-blue-600">Menú</a>
+
+			           <!-- CARRITO -->
+			           <div class="relative">
+						<button onclick="toggleCart()" class="flex items-center gap-1">
+			                   🛒
+			                   <span class="text-sm bg-red-500 text-white rounded-full px-2"
+			                         th:text="${cartCount != null ? cartCount : 0}">
+			                       0
+			                   </span>
+			               </button>
+			               <span class="text-sm text-gray-600 ml-1"
+			                     th:text="${cartTotal != null ? 'S/ ' + cartTotal : 'S/ 0.00'}">
+			                   S/ 0.00
+			               </span>
+			           </div>
+
+					   <!-- USUARIO -->
+					   <div class="relative group">
+
+					       <!-- ICONO -->
+					       <button class="flex items-center gap-1 focus:outline-none">
+					           👤
+					       </button>
+
+					       <!-- DROPDOWN -->
+					       <div
+					           class="absolute right-0 mt-3 w-48 bg-white border rounded-md shadow-lg
+					                  opacity-0 scale-95 pointer-events-none
+					                  group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto
+					                  transition-all duration-200 origin-top-right z-[60]">
+
+					           <!-- NO LOGUEADO -->
+					           <div th:if="${#authentication == null or !#authentication.authenticated}">
+					               <a th:href="@{/login}" class="block px-4 py-2 hover:bg-gray-100">
+					                   Iniciar sesión
+					               </a>
+					               <a th:href="@{/register}" class="block px-4 py-2 hover:bg-gray-100">
+					                   Registrarse
+					               </a>
+					           </div>
+
+					           <!-- CLIENTE -->
+					           <div th:if="${#authorization.expression('hasRole(''CLIENTE'')')}">
+					               <a th:href="@{/cliente/pedidos}" class="block px-4 py-2 hover:bg-gray-100">
+					                   Mis pedidos
+					               </a>
+					               <a th:href="@{/cliente/perfil}" class="block px-4 py-2 hover:bg-gray-100">
+					                   Perfil
+					               </a>
+					               <a th:href="@{/logout}" class="block px-4 py-2 text-red-600 hover:bg-gray-100">
+					                   Cerrar sesión
+					               </a>
+					           </div>
+
+					           <!-- ADMIN / STAFF -->
+					           <div th:if="${#authorization.expression('hasAnyRole(''ADMIN'',''STAFF'')')}">
+					               <a th:href="@{/admin/dashboard}" class="block px-4 py-2 hover:bg-gray-100">
+					                   Dashboard
+					               </a>
+					               <a th:href="@{/perfil}" class="block px-4 py-2 hover:bg-gray-100">
+					                   Perfil
+					               </a>
+					               <a th:href="@{/logout}" class="block px-4 py-2 text-red-600 hover:bg-gray-100">
+					                   Cerrar sesión
+					               </a>
+					           </div>
+
+							   <!-- CODIGO DE PRUEBA PARA VERIFICAR SI EL DROPDOWN AL HACER HOVER FUNCIONA-->
+							   <div th:if="${#authentication != null}">
+							       <a th:href="@{/login}" class="block px-4 py-2">Iniciar sesión</a>
+							   </div>
+					       </div>
+					   </div>
+			       </nav>
+			   </div>
+		</header>
+
+		<!-- OVERLAY -->
+		<div id="cartOverlay"
+		     onclick="toggleCart()"
+		     class="fixed inset-0 bg-black/50 backdrop-blur-sm
+		            opacity-0 pointer-events-none
+		            transition-opacity duration-300 z-40">
+		</div>
+		
+		<!-- SIDEBAR CARRITO -->
+		<div id="cartSidebar"
+		     class="fixed top-0 right-0 w-80 h-full bg-white shadow-lg
+		            transform translate-x-full transition-transform duration-300 z-50">
+
+		    <div class="p-4 border-b flex justify-between items-center">
+		        <h2 class="text-xl font-bold">Tu carrito</h2>
+		        <button onclick="toggleCart()">✖</button>
+		    </div>
+
+		    <div class="p-4 space-y-4">
+		        <div th:each="item : ${cartItems ?: {}}">>
+		            <p class="font-semibold" th:text="${item.plato.nombre}"></p>
+		            <p class="text-sm text-gray-600">
+		                Cant: <span th:text="${item.cantidad}"></span>
+		                · S/ <span th:text="${item.subtotal}"></span>
+		            </p>
+		        </div>
+
+		        <div class="border-t pt-4">
+		            <p class="font-bold">
+		                Total: S/ <span th:text="${cartTotal}">0.00</span>
+		            </p>
+
+		            <a th:href="@{/cliente/carrito}"
+		               class="block mt-4 text-center bg-blue-600 text-white py-2 rounded">
+		                Ver carrito
+		            </a>
+		        </div>
+		    </div>
+		</div>
+		
+		<main layout:fragment="content" class="flex-1 pt-[80px]">
+			
+		</main>
+		
+		<footer
+		  class="relative bg-gray-900 text-white bg-cover bg-center bg-no-repeat"
+		  th:style="'background-image: url(' + @{/img/bg-footer.jpg} + ');'"
+		>
+		  <div class="container mx-auto px-6 py-16">
+
+		    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 backdrop-blur-sm bg-[#010001] rounded-3xl p-10">
+
+		      <div class="space-y-4">
+		        <h3 class="text-2xl font-extrabold tracking-tight">
+		          Disly
+		        </h3>
+
+		        <p class="text-sm text-gray-300 leading-relaxed max-w-xs">
+		          Plataforma digital para pedidos en restaurantes.
+		          Simplifica el consumo en local y delivery.
+		        </p>
+
+		        <div class="flex flex-wrap gap-2 pt-2">
+		          <span class="px-3 py-1 rounded-full text-xs bg-white/10">
+		            🍽️ Menú digital
+		          </span>
+		          <span class="px-3 py-1 rounded-full text-xs bg-white/10">
+		            📱 QR
+		          </span>
+		          <span class="px-3 py-1 rounded-full text-xs bg-white/10">
+		            ⚡ Rápido
+		          </span>
+		        </div>
+		      </div>
+
+		      <div>
+		        <h4 class="font-semibold text-sm uppercase tracking-wider text-gray-200 mb-4">
+		          Navegación
+		        </h4>
+
+		        <ul class="space-y-3 text-sm text-gray-300">
+		          <li>
+		            <a th:href="@{/}" class="hover:text-white transition">
+		              Inicio
+		            </a>
+		          </li>
+		          <li>
+		            <a th:href="@{/menu}" class="hover:text-white transition">
+		              Menú
+		            </a>
+		          </li>
+		          <li>
+		            <a th:href="@{/login}" class="hover:text-white transition">
+		              Acceso
+		            </a>
+		          </li>
+		        </ul>
+		      </div>
+
+		      <div>
+		        <h4 class="font-semibold text-sm uppercase tracking-wider text-gray-200 mb-4">
+		          Contacto
+		        </h4>
+
+		        <div class="space-y-3 text-sm text-gray-300">
+		          <p class="flex items-center gap-2">
+		            📍 Lima, Perú
+		          </p>
+		          <p class="flex items-center gap-2">
+		            📞 +51 999 999 999
+		          </p>
+		          <p class="flex items-center gap-2">
+		            ✉ contacto@disly.pe
+		          </p>
+		        </div>
+		      </div>
+
+		    </div>
+		  </div>
+
+		  <div class="text-center text-xs py-5 text-gray-400">
+		    © 2026 Disly · Proyecto Académico
+		  </div>
+		</footer>
+	</div>
+	
+	<script th:src="@{/js/carrito.js}"></script>
+	<script th:src="@{/js/swiper.js}"></script>
+	<script th:src="@{/js/pedidos.js}"></script>
+	<script th:src="@{/js/admin.js}"></script>
+</body>
+</html>
