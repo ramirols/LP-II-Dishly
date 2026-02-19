@@ -1,0 +1,53 @@
+package com.dishly.app.impl;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.dishly.app.model.Rol;
+import com.dishly.app.repository.RolRepository;
+import com.dishly.app.service.RolService;
+
+@Service
+public class RolServiceImpl implements RolService{
+	
+	@Autowired
+	RolRepository repo;
+	
+	public RolServiceImpl(RolRepository repo) {
+		this.repo = repo;
+	}
+
+	@Override
+	public List<Rol> listarTodo() {
+		return repo.findAll();
+	}
+
+	@Override
+	public Rol buscarRolPorId(Integer id) {
+		return repo.findById(id).get();
+	}
+
+	@Override
+	public Rol guardarRol(Rol rol) {
+		return repo.save(rol);
+	}
+
+	@Override
+	public void eliminarRol(Rol rol) {
+		repo.delete(rol);
+	}
+
+	@Override
+	public void eliminarRolPorId(Integer id) {
+		repo.deleteById(id);
+	}
+
+	@Override
+	public Optional<Rol> buscarPorNombre(String nombre) {
+		return repo.findByNombreRol(nombre);
+	}
+
+}

@@ -22,7 +22,7 @@ public class SecurityConfig {
     }
 
     @Bean
-   SecurityFilterChain securityFilterChain(HttpSecurity http){
+    SecurityFilterChain securityFilterChain(HttpSecurity http){
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authRequest ->
@@ -30,7 +30,7 @@ public class SecurityConfig {
                                 .requestMatchers(
                                         "/**",
                                         "/auth/login/**",
-                                        "/auth/register",
+                                        "/auth/register/**",
                                         "/nosotros",
                                         "/programas",
                                         "/soporte",
@@ -40,13 +40,13 @@ public class SecurityConfig {
                                 .requestMatchers("/admin/**")
                                 .hasRole("ADMIN")
 
-                                .requestMatchers("/usuario/**")
+                                .requestMatchers("/cliente/**")
                                 .hasAnyRole("ADMIN", "CLIENTE")
 
                 .anyRequest().authenticated())
 
                 .formLogin(form -> form
-                        .loginProcessingUrl("/login")
+                        .loginPage("/auth/login")
                         .usernameParameter("email")
                         .passwordParameter("contrasenia")
                         .defaultSuccessUrl("/", true)
@@ -55,9 +55,8 @@ public class SecurityConfig {
                 )
 
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/programas"))
+                        .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/"))
                 )
-
                 .build();
     }
 }

@@ -1,0 +1,46 @@
+package com.dishly.app.impl;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.dishly.app.model.Plato;
+import com.dishly.app.repository.PlatoRepository;
+import com.dishly.app.service.PlatoService;
+
+@Service
+public class PlatoServiceImpl implements PlatoService{
+	
+	PlatoRepository repo;
+	
+	@Override
+	public List<Plato> listarTodo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Plato buscarPlatoPorId(Integer id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Plato guardarPlato(Plato plato) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void eliminarPlato(Plato plato) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void eliminarPlatoPorId(Integer id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

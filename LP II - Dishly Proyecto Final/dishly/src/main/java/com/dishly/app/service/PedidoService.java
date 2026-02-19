@@ -1,8 +1,17 @@
 package com.dishly.app.service;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
 
-@Service
-public class PedidoService {
+import com.dishly.app.model.Pedido;
 
+public interface PedidoService {
+	public List<Pedido> listarTodo();
+	
+	public Pedido buscarPedidoPorId(Integer id);
+	
+	public Pedido guardarPedido(Pedido pedido);
+	
+	public void eliminarPedido(Pedido pedido);
+	
+	public void eliminarPedidoPorId(Integer id);
 }

@@ -1,0 +1,50 @@
+package com.dishly.app.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.dishly.app.model.DetallePedido;
+import com.dishly.app.model.DetallePedidoId;
+import com.dishly.app.repository.DetallePedidoRepository;
+import com.dishly.app.service.DetallePedidoService;
+
+@Service
+public class DetallePedidoServiceImpl implements DetallePedidoService{
+	
+	@Autowired
+	DetallePedidoRepository repo;
+	
+	public DetallePedidoServiceImpl(DetallePedidoRepository repo) {
+		this.repo = repo;
+	}
+
+	@Override
+	public List<DetallePedido> listarTodo() {
+		return repo.findAll();
+	}
+
+	@Override
+	public DetallePedido buscarDetallePedidoPorId(DetallePedido id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DetallePedido guardarDetallePedido(DetallePedido obj) {
+		return null;
+	}
+
+	@Override
+	public void eliminarDetallePedido(DetallePedido obj) {
+		
+	}
+
+	@Override
+	public void eliminarDetallePedidoPorId(DetallePedido id) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}
