@@ -1,0 +1,55 @@
+package com.dishly.app.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.dishly.app.model.Categoria;
+import com.dishly.app.repository.CategoriaRepository;
+import com.dishly.app.service.CategoriaService;
+
+@Service
+public class CategoriaServiceImpl implements CategoriaService{
+	
+	@Autowired
+	CategoriaRepository repo;
+	
+	
+	
+	public CategoriaServiceImpl(CategoriaRepository repo) {
+		super();
+		this.repo = repo;
+	}
+
+	@Override
+	public List<Categoria> listarTodo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Categoria buscarCategoriaPorId(Integer id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Categoria guardarCategoria(Categoria categoria) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void eliminarCategoria(Categoria categoria) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void eliminarCategoriaPorId(Integer id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

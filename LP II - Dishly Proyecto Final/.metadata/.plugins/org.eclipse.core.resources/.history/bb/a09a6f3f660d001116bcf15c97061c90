@@ -1,0 +1,5 @@
+package com.dishly.app.security;
+
+public class UsuarioDetailsService {
+
+}

@@ -1,0 +1,48 @@
+package com.dishly.app.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.dishly.app.model.Usuario;
+import com.dishly.app.repository.UsuarioRepository;
+import com.dishly.app.service.UsuarioService;
+
+@Service
+public class UsuarioServiceImpl implements UsuarioService{
+	@Autowired
+	UsuarioRepository repo;
+
+	public UsuarioServiceImpl(UsuarioRepository repo) {
+		super();
+		this.repo = repo;
+	}
+
+	@Override
+	public List<Usuario> listarTodo() {
+		return repo.findAll();
+	}
+
+	@Override
+	public Usuario buscarUsuarioPorId(Integer id) {
+		return repo.findById(id).get();
+	}
+
+	@Override
+	public Usuario guardarUsuario(Usuario user) {
+		return repo.save(user);
+	}
+
+	@Override
+	public void eliminarUsuario(Usuario user) {
+		repo.delete(user);
+	}
+
+	@Override
+	public void eliminarUsuarioPorId(Integer id) {
+		repo.deleteById(id);
+	}
+	
+	
+}

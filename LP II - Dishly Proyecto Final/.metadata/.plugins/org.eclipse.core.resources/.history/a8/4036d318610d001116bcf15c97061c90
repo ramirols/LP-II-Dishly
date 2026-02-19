@@ -1,0 +1,48 @@
+package com.dishly.app.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.dishly.app.model.Rol;
+import com.dishly.app.repository.RolRepository;
+import com.dishly.app.service.RolService;
+
+@Service
+public class RolServiceImpl implements RolService{
+	
+	@Autowired
+	RolRepository repo;
+	
+	@Override
+	public List<Rol> listarTodo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Rol buscarRolPorId(Integer id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Rol guardarRol(Rol rol) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void eliminarRol(Rol rol) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void eliminarRolPorId(Integer id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

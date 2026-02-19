@@ -1,0 +1,16 @@
+package com.dishly.app.service;
+
+import java.util.List;
+
+import com.dishly.app.model.Usuario;
+
+public interface UsuarioService {
+	
+	public List<Usuario> listarTodo();
+	
+	public Usuario buscarUsuarioPor();
+	
+	public Usuario guardarUsuario(Usuario user);
+	
+	public void eliminarUsuario(Usuario user);
+}

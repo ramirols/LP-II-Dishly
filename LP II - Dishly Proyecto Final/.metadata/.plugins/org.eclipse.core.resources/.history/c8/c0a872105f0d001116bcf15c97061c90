@@ -1,0 +1,15 @@
+package com.dishly.app.service;
+
+import java.util.List;
+
+import com.dishly.app.model.Categoria;
+
+public interface CategoriaService {
+	public List<Categoria> listarTodo();
+	
+	public Categoria buscarUsuarioPorId(Integer id);
+	
+	public Categoria guardarUsuario(Categoria user);
+	
+	public void eliminarUsuario(Categoria user);
+}
