@@ -1,0 +1,10 @@
+package com.dishly.app.impl;
+
+import org.springframework.stereotype.Service;
+
+import com.dishly.app.service.CategoriaService;
+
+@Service
+public class CategoriaServiceImpl implements CategoriaService{
+
+}

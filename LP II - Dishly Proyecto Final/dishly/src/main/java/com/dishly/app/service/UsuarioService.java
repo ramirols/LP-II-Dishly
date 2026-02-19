@@ -1,35 +1,21 @@
 package com.dishly.app.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.dishly.app.model.Usuario;
-import com.dishly.app.repository.UsuarioRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
-@Service
-public class UsuarioService {
-
-    private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder;
-
-    public UsuarioService(UsuarioRepository usuarioRepository,
-                           PasswordEncoder passwordEncoder) {
-        this.usuarioRepository = usuarioRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    public void registrar(String name, String email, String password) {
-
-        if (usuarioRepository.existsByEmail(email)) {
-            throw new RuntimeException("El correo ya está registrado");
-        }
-
-        Usuario u = new Usuario();
-        u.setNombre(name);
-        u.setEmail(email);
-        u.setContrasenia(passwordEncoder.encode(password));
-        //u.setRol("CLIENTE");
-        u.setEstado(true);
-
-        usuarioRepository.save(u);
-    }
+public interface UsuarioService {
+	
+	public List<Usuario> listarTodo();
+	
+	public Usuario buscarUsuarioPorId(Integer id);
+	
+	public Optional<Usuario> buscarPorEmail(String email);
+	
+	public Usuario guardarUsuario(Usuario user);
+	
+	public void eliminarUsuario(Usuario user);
+	
+	public void eliminarUsuarioPorId(Integer id);
 }

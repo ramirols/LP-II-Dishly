@@ -1,0 +1,7 @@
+package com.dishly.app.impl;
+
+import com.dishly.app.service.CategoriaService;
+
+public class CategoriaServiceImpl implements CategoriaService{
+
+}

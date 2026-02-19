@@ -1,0 +1,5 @@
+package com.dishly.app.impl;
+
+public class PlatoServiceImpl {
+
+}

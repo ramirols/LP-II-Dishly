@@ -1,33 +1,17 @@
 package com.dishly.app.service;
 
-import com.dishly.app.model.Plato;
-import com.dishly.app.repository.PlatoRepository;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 
-@Service
-public class PlatoService {
+import com.dishly.app.model.Plato;
 
-    private final PlatoRepository platoRepository;
-
-    public PlatoService(PlatoRepository platoRepository) {
-        this.platoRepository = platoRepository;
-    }
-
-    public List<Plato> listarActivos() {
-        return platoRepository.findAll()
-                .stream()
-                .filter(Plato::isEstado)
-                .toList();
-    }
-
-    public Plato buscarPorId(Long id) {
-        return platoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Plato no encontrado"));
-    }
-
-    public Plato guardar(Plato plato) {
-        return platoRepository.save(plato);
-    }
+public interface PlatoService {
+	public List<Plato> listarTodo();
+	
+	public Plato buscarPlatoPorId(Integer id);
+	
+	public Plato guardarPlato(Plato plato);
+	
+	public void eliminarPlato(Plato plato);
+	
+	public void eliminarPlatoPorId(Integer id);
 }

@@ -1,0 +1,10 @@
+package com.dishly.app.impl;
+
+import org.springframework.stereotype.Service;
+
+import com.dishly.app.service.DetallePedidoService;
+
+@Service
+public class DetallePedidoServiceImpl implements DetallePedidoServicel{
+	
+}
