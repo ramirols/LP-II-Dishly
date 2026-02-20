@@ -39,7 +39,6 @@
 		            0
 		          </span>
 
-<<<<<<< HEAD
 		          <span
 		            class="hidden sm:inline text-sm text-gray-700 font-medium"
 		            th:text="${cartTotal != null ? 'S/ ' + cartTotal : 'S/ 0.00'}">
@@ -72,17 +71,17 @@
 		                 transition-all duration-200 origin-top-right">
 
 		          <!-- NO LOGUEADO -->
-		          <div th:if="${#authentication == null or !#authentication.authenticated}">
-		            <a th:href="@{/login}" class="block px-5 py-3 hover:bg-gray-50">
+		          <div sec:authorize="isAnonymous()">
+		            <a th:href="@{/auth/login}" class="block px-5 py-3 hover:bg-gray-50">
 		              Iniciar sesión
 		            </a>
-		            <a th:href="@{/register}" class="block px-5 py-3 hover:bg-gray-50">
+		            <a th:href="@{/auth/register}" class="block px-5 py-3 hover:bg-gray-50">
 		              Registrarse
 		            </a>
 		          </div>
 
 		          <!-- CLIENTE -->
-		          <div th:if="${#authorization.expression('hasRole(''CLIENTE'')')}">
+		          <div sec:authorize="hasRole('CLIENTE')">
 		            <a th:href="@{/cliente/pedidos}" class="block px-5 py-3 hover:bg-gray-50">
 		              Mis pedidos
 		            </a>
@@ -96,7 +95,7 @@
 		          </div>
 
 		          <!-- ADMIN / STAFF -->
-		          <div th:if="${#authorization.expression('hasAnyRole(''ADMIN'',''STAFF'')')}">
+		          <div sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
 		            <a th:href="@{/admin/dashboard}" class="block px-5 py-3 hover:bg-gray-50">
 		              Dashboard
 		            </a>
@@ -114,47 +113,6 @@
 
 		    </div>
 		  </div>
-=======
-					           <!-- NO LOGUEADO -->
-					           <div sec:authorize="isAnonymous()">
-					               <a th:href="@{/auth/login}" class="block px-4 py-2 hover:bg-gray-100">
-					                   Iniciar sesión
-					               </a>
-					               <a th:href="@{/auth/register}" class="block px-4 py-2 hover:bg-gray-100">
-					                   Registrarse
-					               </a>
-					           </div>
-
-					           <!-- CLIENTE -->
-					           <div sec:authorize="hasRole('CLIENTE')">
-					               <a th:href="@{/cliente/pedidos}" class="block px-4 py-2 hover:bg-gray-100">
-					                   Mis pedidos
-					               </a>
-					               <a th:href="@{/cliente/perfil}" class="block px-4 py-2 hover:bg-gray-100">
-					                   Perfil
-					               </a>
-					               <a th:href="@{/logout}" class="block px-4 py-2 text-red-600 hover:bg-gray-100">
-					                   Cerrar sesión
-					               </a>
-					           </div>
-
-					           <!-- ADMIN / STAFF -->
-					           <div sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
-					               <a th:href="@{/admin/dashboard}" class="block px-4 py-2 hover:bg-gray-100">
-					                   Dashboard
-					               </a>
-					               <a th:href="@{/perfil}" class="block px-4 py-2 hover:bg-gray-100">
-					                   Perfil
-					               </a>
-					               <a th:href="@{/logout}" class="block px-4 py-2 text-red-600 hover:bg-gray-100">
-					                   Cerrar sesión
-					               </a>
-					           </div>
-					       </div>
-					   </div>
-			       </nav>
-			   </div>
->>>>>>> fc8de97ed283f89ba0e0fa4029fc04e9e8d69ef9
 		</header>
 
 		<!-- OVERLAY -->
