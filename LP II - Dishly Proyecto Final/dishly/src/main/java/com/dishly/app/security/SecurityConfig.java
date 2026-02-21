@@ -28,13 +28,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authRequest ->
                         authRequest
                                 .requestMatchers(
-                                        "/**",
+                                        "/",
                                         "/auth/login/**",
                                         "/auth/register/**",
-                                        "/nosotros",
-                                        "/programas",
-                                        "/soporte",
-                                        "/js/**"
+                                        "/js/**",
+                                        "/css/**",
+                                        "/img/**"
                 ).permitAll()
 
                                 .requestMatchers("/admin/**")

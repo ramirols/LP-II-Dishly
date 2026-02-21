@@ -2,7 +2,11 @@ package com.dishly.app.controller;
 
 import org.springframework.stereotype.Controller;
 
-@Controller
-public class AdminController {
+import org.springframework.web.bind.annotation.RequestMapping;
 
+
+@Controller
+@RequestMapping("/admin")
+public class AdminController {
+	
 }
