@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+    <main>
+        <button type="button"
+                onclick="abrirModalAgregar()"
+        >
+            Agregar plato
+        </button>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Categoria</th>
+                    <th>Imagen-URL</th>
+                    <th>Estado</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="plato : ${platos}">
+                    <td th:text="${plato.nombre}"></td>
+                    <td th:text="${plato.precio}"></td>
+                    <td th:text="${plato.categoria.nombre}"></td>
+                    <td th:text="${plato.imagen}"></td>
+                    <td th:text="${plato.estado}"></td>
+                    <td>
+                    	<div>
+                    		<button type="button"
+                                    th:data-id="${plato.id}"
+                                    th:data-nombre="${plato.nombre}"
+                                    th:data-precio="${plato.precio}"
+                                    th:data-idcategoria="${plato.categoria.id}"
+                                    th:data-imgurl="${plato.imagen}"
+                                    th:data-estado="${plato.estado}"
+                                    onclick="abrirModalEditar(this)"
+                            >
+                                Editar
+                            </button>
+                    		<button type="button"
+                                    th:data-id="${plato.id}"
+                                    onclick="abrirModalEliminar(this)"
+                            >
+                                Eliminar
+                            </button>
+                    	</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+        	<!-- Formulario para guardar-->
+            <div id="modalGuardar" style="display:none;">
+                <form method="post" th:object="${platoDTO}" th:action="@{/admin/platos/guardar}">
+                    <input type="hidden" th:field="*{id}" id="idplato" />
+                
+                    <label for="plato">Nombre</label>
+                    <input th:field="*{nombrePlato}" type="text" id="plato" required>
+
+                    <label for="precio">Precio</label>
+                    <input th:field="*{precio}" type="text" id="precio" required>
+
+                    <label for="imagen">imagen URL</label>
+                    <input th:field="*{imagenUrl}" type="text" id="imagen" required>
+
+                    <label for="categorias">Categoria</label>
+                    <select th:field="*{idCategoria}" id="categorias" required>
+                            <option th:each="cat : ${categorias}"
+                                    th:value="${cat.id}"
+                                    th:text="${cat.nombre}">
+                            </option>
+                    </select>
+                    
+                    <button type="button" onclick="abrirModalCategoria()">Nueva Categoria</button>
+                    
+                    <button type="submit">
+                            Guardar
+                    </button>
+                    <button type="button" onclick="cerrarModalEditar()">
+                            Cancelar
+                    </button>
+                </form>
+            </div>
+            <!-- Formulario para eliminar -->
+            <div id="modalEliminar" style="display:none;">
+                <form method="post" th:object="${platoDTO}" th:action="@{/admin/platos/eliminar}">
+                    <input type="hidden" th:field="*{id}" id="platoEliminar"/>
+                    
+                    <button type="submit">
+                            Eliminar
+                    </button>
+                    <button type="button" onclick="cerrarModalEliminar()">
+                            Cancelar
+                    </button>
+                </form>
+            </div>
+        	<!-- Modal para categorias-->
+            <div id="modalCategoria" style="display:none;">
+                <button type="button" onclick="abrirModalAgregarCategoria()">Nueva Categoria</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Categoria</th>
+                            <th>Descripcion</th>
+                            <th>Accion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="cat : ${categorias}">
+                            <td th:text="${cat.nombre}"></td>
+                            <td th:text="${cat.descripcion}"></td>
+                            <td>
+                                <div>
+                                    <button type="button"
+                                            th:data-idcat="${cat.id}"
+                                            th:data-nombrecat="${cat.nombre}"
+                                            th:data-desc="${cat.descripcion}"
+                                            onclick="abrirModalEditarCategoria(this)"
+                                    >
+                                        Editar
+                                    </button>
+                                    <button type="button"
+                                            th:data-idcat="${cat.id}"
+                                            onclick="abrirModalEliminarCategoria(this)"
+                                    >
+                                        Eliminar
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- Formulario para guardar categoria-->
+                <div id="modalGuardarCategoria" style="display:none;">
+                    <form method="post" th:object="${categoriaDTO}" th:action="@{/admin/platos/categoria/guardar}">
+                        <input type="hidden" th:field="*{id}" id="idcategoria" />
+                    
+                        <label for="categoria">Nombre</label>
+                        <input th:field="*{nombre}" type="text" id="categoria" required>
+
+                        <label for="categoriaDescripcion">Descripcion</label>
+                        <input th:field="*{descripcion}" type="text" id="categoriaDescripcion" required>
+                        
+                        <button type="submit">
+                                Guardar
+                        </button>
+                        <button type="button" onclick="cerrarModalEditarCategoria()">
+                                Cancelar
+                        </button>
+                    </form>
+                </div>
+                <!-- Formulario para eliminar categoria -->
+                <div id="modalEliminarCategoria" style="display:none;">
+                    <form method="post" th:object="${platoDTO}" th:action="@{/admin/platos/categoria/eliminar}">
+                        <input type="hidden" th:field="*{id}" id="categoriaEliminar"/>
+                        
+                        <button type="submit">
+                                Eliminar
+                        </button>
+                        <button type="button" onclick="cerrarModalEliminarCategoria()">
+                                Cancelar
+                        </button>
+                    </form>
+                </div>
+                <button type="button" onclick="cerrarModalCategoria()">Cerrar</button>
+            </div>
+        </div>
+        <script th:src="@{/js/platosModal.js}"></script>
+    </main>
+</html>

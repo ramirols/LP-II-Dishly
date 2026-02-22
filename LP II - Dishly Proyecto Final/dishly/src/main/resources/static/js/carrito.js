@@ -1,11 +1,16 @@
 function toggleCart() {
     const cart = document.getElementById('cartSidebar');
     const overlay = document.getElementById('cartOverlay');
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3d1df5a539d2d7489d6edec0b93316de935d2f47
     const isOpen = !cart.classList.contains('translate-x-full');
 
     if (isOpen) {
         cart.classList.add('translate-x-full');
         overlay.classList.add('opacity-0', 'pointer-events-none');
+<<<<<<< HEAD
         localStorage.setItem('cartState', 'closed');
     } else {
         cart.classList.remove('translate-x-full');
@@ -72,3 +77,19 @@ function updateCartServer(id, delta) {
     const url = delta > 0 ? `/carrito/agregar/${id}` : `/carrito/restar/${id}`;
     window.location.href = url;
 }
+=======
+    } else {
+        cart.classList.remove('translate-x-full');
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+    }
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        const cart = document.getElementById('cartSidebar');
+        if (!cart.classList.contains('translate-x-full')) {
+            toggleCart();
+        }
+    }
+});
+>>>>>>> 3d1df5a539d2d7489d6edec0b93316de935d2f47

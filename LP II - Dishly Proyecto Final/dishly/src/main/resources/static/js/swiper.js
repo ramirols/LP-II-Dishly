@@ -1,4 +1,5 @@
 new Swiper('.heroSwiper', {
+<<<<<<< HEAD
   loop: true,
   autoplay: {
     delay: 5000,
@@ -51,4 +52,18 @@ new Swiper('.featuredSwiper', {
     640: { slidesPerView: 2 },
     1024: { slidesPerView: 3 }
   }
+=======
+    loop: true,
+    autoplay: { delay: 5000 },
+    pagination: { el: '.swiper-pagination', clickable: true }
+  });
+
+  new Swiper('.categorySwiper', {
+    slidesPerView: 2,
+    spaceBetween: 20,
+    breakpoints: {
+      640: { slidesPerView: 3 },
+      1024: { slidesPerView: 5 }
+    }
+>>>>>>> 3d1df5a539d2d7489d6edec0b93316de935d2f47
 });

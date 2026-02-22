@@ -13,8 +13,11 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 @EnableWebSecurity
 public class SecurityConfig {
 
+    public SecurityConfig() {
+    }
+
     @Bean
-    PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
@@ -63,7 +66,8 @@ public class SecurityConfig {
                 .usernameParameter("email")
                 .passwordParameter("contrasenia")
                 // true para que siempre vaya al inicio, false para que respete a donde quería ir (SavedRequest)
-                .defaultSuccessUrl("/", false) 
+                .defaultSuccessUrl("/", false)
+                .failureUrl("/?error=true") 
                 .permitAll()
             )
 
