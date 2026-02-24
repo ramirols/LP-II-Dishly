@@ -33,8 +33,6 @@ public class SecurityConfig {
                     "/plato/**",
                     "/carrito/**",
                     "/nosotros",
-                    "/programas",
-                    "/soporte",
                     "/auth/**",
                     "/js/**",
                     "/css/**",
@@ -43,7 +41,7 @@ public class SecurityConfig {
 
                 // CHECKOUT
                 .requestMatchers("/cliente/checkout")
-                    .hasAnyRole("CLIENTE", "ADMIN")
+                .authenticated()
 
                 // RUTAS DE CLIENTE
                 .requestMatchers("/cliente/pedidos/**").hasRole("CLIENTE")
