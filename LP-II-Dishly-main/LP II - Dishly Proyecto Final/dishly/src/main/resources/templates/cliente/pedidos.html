@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <title>Mis Pedidos | Dishly</title>
+</head>
+<body>
+
+    <main layout:fragment="content" class="bg-slate-50 min-h-screen py-12">
+        <div class="max-w-5xl mx-auto px-4">
+            
+            <div class="mb-8">
+                <h1 class="text-3xl font-black text-slate-800">Mis Pedidos</h1>
+                <p class="text-slate-500">Revisa el historial y estado de tus compras gastronómicas.</p>
+            </div>
+
+            <div class="space-y-4">
+                
+                <div th:each="pedido : ${pedidos}" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:shadow-md transition-shadow">
+                    
+                    <div class="flex items-center gap-5">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-box-open"></i>
+                        </div>
+                        
+                        <div>
+                            <div class="flex items-center gap-3 mb-1">
+                                <span class="font-bold text-slate-800" th:text="'Orden #' + ${pedido.id}"></span>
+                                
+                                <span th:if="${pedido.estado == 'PENDIENTE'}" class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-amber-100 text-amber-600">
+                                    Pendiente
+                                </span>
+                                <span th:if="${pedido.estado == 'ENTREGADO'}" class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-green-100 text-green-600">
+                                    Entregado
+                                </span>
+                                <span th:if="${pedido.estado == 'CANCELADO'}" class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-red-100 text-red-600">
+                                    Cancelado
+                                </span>
+                            </div>
+                            <p class="text-xs text-slate-400" th:text="${#temporals.format(pedido.fecha, 'dd MMM yyyy, HH:mm')}"></p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-8 md:text-right">
+                        <div class="hidden sm:block">
+                            <p class="text-xs text-slate-400 mb-1">Productos</p>
+                            <p class="text-sm font-medium text-slate-700" th:text="${#lists.size(pedido.detalles)} + ' items'"></p>
+                        </div>
+                        
+                        <div>
+                            <p class="text-xs text-slate-400 mb-1">Total Pagado</p>
+                            <p class="text-lg font-black text-blue-600" th:text="'S/ ' + ${#numbers.formatDecimal(pedido.total, 1, 2)}"></p>
+                        </div>
+
+                        <a th:href="@{/cliente/pedidos/{id}(id=${pedido.id})}" class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:text-white transition-colors">
+                            <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div th:if="${#lists.isEmpty(pedidos)}" class="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
+                    <div class="w-20 h-20 bg-slate-50 text-slate-300 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                        <i class="fa-solid fa-utensils"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800">Aún no has pedido nada</h3>
+                    <p class="text-slate-500 mb-6">¿Qué tal si exploras nuestro menú hoy?</p>
+                    <a href="/" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition">
+                        Ver Menú
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

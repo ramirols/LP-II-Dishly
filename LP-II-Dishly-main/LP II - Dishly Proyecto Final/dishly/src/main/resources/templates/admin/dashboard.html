@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dishly · Dashboard Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { font-family: 'DM Sans', sans-serif; }
+        .font-display { font-family: 'Syne', sans-serif; }
+
+        .sidebar {
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+        }
+
+        .nav-link {
+            transition: all 0.2s;
+            border-radius: 12px;
+            color: #94a3b8;
+        }
+        .nav-link:hover, .nav-link.active {
+            background: rgba(99,102,241,0.15);
+            color: #fff;
+        }
+        .nav-link.active {
+            background: rgba(99,102,241,0.2);
+            border-left: 3px solid #6366f1;
+            color: #fff;
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 60%, #8b5cf6 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.07);
+        }
+        .welcome-banner::after {
+            content: '';
+            position: absolute;
+            bottom: -60px; left: 30%;
+            width: 280px; height: 280px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .stat-card {
+            background: #fff;
+            border-radius: 20px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        .chart-card {
+            background: #fff;
+            border-radius: 20px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+
+        .badge-pill {
+            font-size: 11px;
+            padding: 3px 12px;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+        .status-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            display: inline-block;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in { animation: fadeInUp 0.4s ease both; }
+        .delay-1 { animation-delay: 0.05s; }
+        .delay-2 { animation-delay: 0.10s; }
+        .delay-3 { animation-delay: 0.15s; }
+        .delay-4 { animation-delay: 0.20s; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex">
+
+<!-- ===================== SIDEBAR ===================== -->
+<div th:replace="~{admin/fragments/sidebar :: sidebar(activeMenu='dashboard')}"></div>
+
+<!-- ===================== MAIN ===================== -->
+<main class="ml-64 flex-1 p-8 min-h-screen">
+
+    <!-- Banner bienvenida -->
+    <div class="welcome-banner rounded-2xl p-8 mb-8 animate-in">
+        <div class="relative z-10">
+				<h1 class="text-3xl font-extrabold text-white mb-1">
+					¡Bienvenido de vuelta, <span th:text="${adminNombre}">Admin</span>!
+					🚀
+				</h1>
+				<p class="text-blue-100 text-sm max-w-lg">
+                Acá tenés el resumen de la operación de hoy. Revisá los pedidos, las ventas y el estado del catálogo.
+            </p>
+            <div class="flex flex-wrap gap-2 mt-5">
+                <span class="badge-pill bg-white/20 text-white">
+                    🛒 <span th:text="${totalPedidos}">0</span> pedidos totales
+                </span>
+                <span class="badge-pill bg-white/20 text-white">
+                    🍽️ <span th:text="${totalPlatos}">0</span> platos activos
+                </span>
+                <span class="badge-pill bg-white/20 text-white">
+                    👥 <span th:text="${totalUsuarios}">0</span> usuarios
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
+
+        <!-- Pedidos totales -->
+        <div class="stat-card p-6 animate-in delay-1">
+            <div class="flex items-center justify-between mb-4">
+                <p class="text-sm font-medium text-slate-500">Pedidos totales</p>
+                <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                    <i class="fa-solid fa-bag-shopping text-blue-500"></i>
+                </div>
+            </div>
+            <p class="text-3xl font-bold text-slate-800" th:text="${totalPedidos}">0</p>
+            <p class="text-xs text-slate-400 mt-1">Registrados en el sistema</p>
+        </div>
+
+        <!-- Ventas totales -->
+        <div class="stat-card p-6 animate-in delay-2">
+            <div class="flex items-center justify-between mb-4">
+                <p class="text-sm font-medium text-slate-500">Ventas totales</p>
+                <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
+                    <i class="fa-solid fa-sack-dollar text-green-500"></i>
+                </div>
+            </div>
+            <p class="text-3xl font-bold text-slate-800">
+                S/ <span th:text="${#numbers.formatDecimal(ventasTotales, 1, 2)}">0.00</span>
+            </p>
+            <p class="text-xs text-slate-400 mt-1">Suma de todos los pedidos</p>
+        </div>
+
+        <!-- Platos activos -->
+        <div class="stat-card p-6 animate-in delay-3">
+            <div class="flex items-center justify-between mb-4">
+                <p class="text-sm font-medium text-slate-500">Platos activos</p>
+                <div class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center">
+                    <i class="fa-solid fa-utensils text-orange-400"></i>
+                </div>
+            </div>
+            <p class="text-3xl font-bold text-slate-800" th:text="${totalPlatos}">0</p>
+            <p class="text-xs text-slate-400 mt-1">En el menú actualmente</p>
+        </div>
+
+        <!-- Usuarios registrados -->
+        <div class="stat-card p-6 animate-in delay-4">
+            <div class="flex items-center justify-between mb-4">
+                <p class="text-sm font-medium text-slate-500">Usuarios</p>
+                <div class="w-10 h-10 rounded-xl bg-violet-50 flex items-center justify-center">
+                    <i class="fa-solid fa-users text-violet-500"></i>
+                </div>
+            </div>
+            <p class="text-3xl font-bold text-slate-800" th:text="${totalUsuarios}">0</p>
+            <p class="text-xs text-slate-400 mt-1">Cuentas registradas</p>
+        </div>
+    </div>
+
+    <!-- Charts + Últimos pedidos -->
+    <div class="grid grid-cols-1 xl:grid-cols-5 gap-6">
+
+        <!-- Gráfico ventas por mes -->
+        <div class="chart-card p-6 xl:col-span-3">
+            <div class="flex items-center justify-between mb-5">
+                <div>
+                    <h2 class="font-semibold text-slate-800">Ventas por mes</h2>
+                    <p class="text-xs text-slate-400">Últimos 6 meses · S/</p>
+                </div>
+                <span class="text-xs text-slate-400 uppercase tracking-wide">Últimos datos</span>
+            </div>
+            <canvas id="chartVentas" height="200"></canvas>
+        </div>
+
+        <!-- Gráfico estado pedidos -->
+        <div class="chart-card p-6 xl:col-span-2">
+            <div class="flex items-center justify-between mb-5">
+                <div>
+                    <h2 class="font-semibold text-slate-800">Estado de pedidos</h2>
+                    <p class="text-xs text-slate-400">Distribución general</p>
+                </div>
+            </div>
+            <div class="flex items-center justify-center">
+                <canvas id="chartEstados" width="200" height="200"></canvas>
+            </div>
+            <div class="flex justify-center gap-4 mt-4 text-xs text-slate-500">
+                <span class="flex items-center gap-1">
+                    <span class="status-dot bg-green-400"></span> Completados
+                </span>
+                <span class="flex items-center gap-1">
+                    <span class="status-dot bg-yellow-400"></span> Pendientes
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Últimos pedidos -->
+    <div class="chart-card p-6 mt-6">
+        <div class="flex items-center justify-between mb-5">
+            <div>
+                <h2 class="font-semibold text-slate-800">Últimos pedidos</h2>
+                <p class="text-xs text-slate-400">Los más recientes registrados</p>
+            </div>
+            <a href="/admin/pedidos"
+               class="text-xs font-medium text-indigo-600 hover:text-indigo-800 transition">
+                Ver todos →
+            </a>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="text-left text-xs uppercase tracking-wide text-slate-400 border-b border-slate-100">
+                        <th class="pb-3 pr-4">#ID</th>
+                        <th class="pb-3 pr-4">Cliente</th>
+                        <th class="pb-3 pr-4">Fecha</th>
+                        <th class="pb-3 pr-4">Total</th>
+                        <th class="pb-3">Estado</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    <tr th:each="pedido : ${ultimosPedidos}"
+                        class="hover:bg-slate-50 transition">
+                        <td class="py-3 pr-4 font-mono text-slate-400 text-xs"
+                            th:text="'#' + ${pedido.id}"></td>
+                        <td class="py-3 pr-4">
+                            <div class="flex items-center gap-2">
+                                <div class="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-xs font-bold"
+                                     th:text="${#strings.substring(pedido.usuario.nombre,0,1).toUpperCase()}">?</div>
+                                <span class="font-medium text-slate-700"
+                                      th:text="${pedido.usuario.nombre}">—</span>
+                            </div>
+                        </td>
+                        <td class="py-3 pr-4 text-slate-500 text-xs"
+                            th:text="${#temporals.format(pedido.fechaCreacion,'dd/MM/yyyy HH:mm')}">—</td>
+                        <td class="py-3 pr-4 font-semibold text-slate-800"
+                            th:text="'S/ ' + ${#numbers.formatDecimal(pedido.total,1,2)}">—</td>
+                        <td class="py-3">
+                            <span th:if="${pedido.estado}"
+                                  class="badge-pill bg-green-100 text-green-700">
+                                ✓ Completado
+                            </span>
+                            <span th:unless="${pedido.estado}"
+                                  class="badge-pill bg-yellow-100 text-yellow-700">
+                                ⏳ Pendiente
+                            </span>
+                        </td>
+                    </tr>
+                    <!-- Empty state -->
+                    <tr th:if="${#lists.isEmpty(ultimosPedidos)}">
+                        <td colspan="5" class="py-10 text-center text-slate-400 text-sm">
+                            <i class="fa-solid fa-bag-shopping text-2xl mb-2 block"></i>
+                            No hay pedidos registrados aún
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
+<!-- ===================== SCRIPTS ===================== -->
+<script th:inline="javascript">
+    // Data from Thymeleaf
+    const meses     = /*[[${mesesLabels}]]*/ ['Ene','Feb','Mar','Abr','May','Jun'];
+    const ventas    = /*[[${ventasPorMes}]]*/ [0,0,0,0,0,0];
+    const completados = /*[[${pedidosCompletados}]]*/ 0;
+    const pendientes  = /*[[${pedidosPendientes}]]*/ 0;
+
+    // Chart 1: Ventas por mes (line)
+    new Chart(document.getElementById('chartVentas'), {
+        type: 'line',
+        data: {
+            labels: meses,
+            datasets: [{
+                label: 'Ventas (S/)',
+                data: ventas,
+                borderColor: '#6366f1',
+                backgroundColor: 'rgba(99,102,241,0.08)',
+                borderWidth: 2.5,
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#6366f1',
+                pointRadius: 5,
+                pointHoverRadius: 7,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => ' S/ ' + ctx.parsed.y.toFixed(2)
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: '#f1f5f9' },
+                    ticks: { callback: v => 'S/ ' + v, font: { size: 11 } }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { size: 11 } }
+                }
+            }
+        }
+    });
+
+    // Chart 2: Donut estados
+    new Chart(document.getElementById('chartEstados'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Completados', 'Pendientes'],
+            datasets: [{
+                data: [completados, pendientes],
+                backgroundColor: ['#4ade80', '#fbbf24'],
+                borderWidth: 0,
+                hoverOffset: 6
+            }]
+        },
+        options: {
+            cutout: '68%',
+            responsive: false,
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+</script>
+</body>
+</html>
