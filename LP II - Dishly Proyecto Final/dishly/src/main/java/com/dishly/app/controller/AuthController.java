@@ -2,6 +2,7 @@ package com.dishly.app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,10 +29,17 @@ public class AuthController {
     }
     
     @PostMapping("/register")
-    public String registrarUsuario(@ModelAttribute RegisterDTO dto) {
-        if (!dto.getContrasenia().equals(dto.getConfirmarContrasenia()))
-            return "redirect:/?passwordError";
-
+    public String registrarUsuario(@ModelAttribute RegisterDTO dto, Model model) {
+        if (!dto.getContrasenia().equals(dto.getConfirmarContrasenia())) {
+            model.addAttribute("passwordError", "Las contraseñas no coinciden");
+            return "public/register";
+        }
+        
+        if (usuarioService.buscarPorEmail(dto.getEmail()).isPresent()) {
+            model.addAttribute("emailError", "El correo ya está registrado");
+            return "public/register";
+        }
+        
         Usuario usuario = new Usuario();
         usuario.setNombre(dto.getNombre());
         usuario.setEmail(dto.getEmail());
@@ -41,7 +49,7 @@ public class AuthController {
         usuario.getRoles().add(rolUsuario);
 
         usuarioService.guardarUsuario(usuario);
-        return "redirect:/?registroExitoso";
+        return "redirect:/auth/login?registroExitoso";
     }
     
     @GetMapping("/login")
