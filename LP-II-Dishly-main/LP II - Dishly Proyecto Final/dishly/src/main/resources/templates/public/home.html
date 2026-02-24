@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/main}">
+      layout:decorate="~{layout/main}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <main layout:fragment="content">
 
@@ -353,15 +354,24 @@
       <h3 class="text-4xl md:text-5xl font-bold mb-6">
         ¿Listo para ordenar sin complicaciones?
       </h3>
-
-      <p class="text-blue-100 mb-10">
-        Crea tu cuenta y disfruta de una experiencia rápida y moderna.
-      </p>
-
-      <a th:href="@{/auth/register}"
-         class="inline-block bg-white text-blue-600 px-10 py-4 rounded-xl font-semibold hover:bg-gray-100 transition">
-        Crear cuenta gratis
-      </a>
+      <div sec:authorize="isAuthenticated()">
+      	  <p class="text-blue-100 mb-10">
+        	Disfruta de una experiencia rápida y moderna.
+          </p>
+	      <a href="/#menu"
+	         class="inline-block bg-white text-blue-600 px-10 py-4 rounded-xl font-semibold hover:bg-gray-100 transition">
+	        Ver menú
+	      </a>
+      </div>
+	  <div sec:authorize="isAnonymous()">
+      	  <p class="text-blue-100 mb-10">
+        	Crea tu cuenta y disfruta de una experiencia rápida y moderna.
+          </p>
+	      <a th:href="@{/auth/register}"
+	         class="inline-block bg-white text-blue-600 px-10 py-4 rounded-xl font-semibold hover:bg-gray-100 transition">
+	        Crear cuenta gratis
+	      </a>
+      </div>
 
     </div>
   </section>

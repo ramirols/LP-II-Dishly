@@ -84,9 +84,16 @@
 			             focus:outline-none focus:ring-2 focus:ring-blue-500">
 
 			      <span class="text-xl">👤</span>
-			      <span class="hidden sm:inline text-sm font-medium text-gray-700">
-			        Cuenta
-			      </span>
+				  <div sec:authorize="isAnonymous()">
+					<span class="hidden sm:inline text-sm font-medium text-gray-700">
+						Cuenta
+					</span>
+				  </div>
+				  <div sec:authorize="isAuthenticated()">
+					<span class="hidden sm:inline text-sm font-medium text-gray-700">
+						Hola, <span th:text="${#strings.substringBefore(#authentication.name, '@')}"></span>
+					</span>
+				  </div>
 			    </button>
 
 			    <!-- ESPACIO HOVER -->
@@ -118,10 +125,6 @@
 			        <a th:href="@{/cliente/pedidos}"
 			           class="block px-5 hover:rounded-2xl py-3 text-sm hover:bg-gray-50 transition">
 			          Mis pedidos
-			        </a>
-			        <a th:href="@{/cliente/perfil}"
-			           class="block px-5 py-3 hover:rounded-2xl text-sm hover:bg-gray-50 transition">
-			          Perfil
 			        </a>
 			        <div class="border-t my-1"></div>
 			        <a th:href="@{/logout}"
@@ -253,12 +256,14 @@
 		            </span>
 		        </div>
 
-		        <a th:href="@{/cliente/checkout}"
-		           class="block w-full text-center py-3 rounded-xl
-		                  bg-blue-600 text-white font-semibold
-		                  hover:bg-blue-700 transition shadow-lg shadow-blue-200">
-		            Ír a confirmar pedidos
-		        </a>
+				<div th:if="${not #lists.isEmpty(cartItems)}">
+					<a th:href="@{/cliente/checkout}"
+					class="block w-full text-center py-3 rounded-xl
+							bg-blue-600 text-white font-semibold
+							hover:bg-blue-700 transition shadow-lg shadow-blue-200">
+						Ír a confirmar pedidos
+					</a>
+				</div>
 		    </div>
 		</div>
 		
