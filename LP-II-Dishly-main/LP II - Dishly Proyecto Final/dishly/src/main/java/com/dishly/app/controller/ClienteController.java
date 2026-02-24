@@ -14,6 +14,7 @@ import com.dishly.app.model.CarritoItem;
 import com.dishly.app.model.Pedido;
 import com.dishly.app.model.Usuario;
 import com.dishly.app.service.PedidoService;
+import com.dishly.app.service.UsuarioService;
 
 @Controller
 @RequestMapping("/cliente")
@@ -21,6 +22,9 @@ public class ClienteController {
 	@Autowired
 	private PedidoService pedidoService;
 
+	@Autowired
+	private UsuarioService usuarioService;
+	
     @GetMapping("/carrito")
     public String carrito(HttpSession session, Model model) {
 
@@ -54,55 +58,84 @@ public class ClienteController {
         return "cliente/checkout";
     }
     
-    /*@PostMapping("/checkout/confirmar")
+    @PostMapping("/checkout/confirmar")
     public String confirmarPedido(HttpSession session, 
-                                  @AuthenticationPrincipal Usuario usuarioLogueado,
+                                  @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails, 
                                   @RequestParam("pago") String metodoPago,
                                   @RequestParam("direccion") String direccion) {
         
-        List<CarritoItem> carrito = (List<CarritoItem>) session.getAttribute("carrito");
-        
-        if (carrito == null || carrito.isEmpty()) {
-            return "redirect:/menu";
+        // valida que el usuario esté autenticado
+        if (userDetails == null) {
+            return "redirect:/auth/login";
         }
 
-        // 1. Crear la cabecera del pedido
+        // obtiene el carrito de la sesión
+        List<CarritoItem> carrito = (List<CarritoItem>) session.getAttribute("carrito");
+        if (carrito == null || carrito.isEmpty()) {
+            return "redirect:/cliente/carrito";
+        }
+
+        // Usa el email que viene dentro de userDetails
+        Usuario usuarioLogueado = usuarioService.buscarPorEmail(userDetails.getUsername())
+                                                .orElse(null);
+
+        // crea y configura el objeto Pedido
         Pedido pedido = new Pedido();
         pedido.setUsuario(usuarioLogueado);
-        pedido.setFecha(java.time.LocalDateTime.now());
-        pedido.setEstado("PENDIENTE");
-        pedido.setMetodoPago(metodoPago);
+        pedido.setMetodoPago(metodoPago.toUpperCase());
         pedido.setDireccionEnvio(direccion);
+        pedido.setEstado(true); 
         
         double total = carrito.stream().mapToDouble(CarritoItem::getSubtotal).sum();
         pedido.setTotal(java.math.BigDecimal.valueOf(total));
 
-        // 2. Guardar pedido y detalles usando el servicio
-        pedidoService.guardarPedidoCompleto(pedido, carrito);
+        // guarda pedido completo
+        Pedido pedidoGuardado = pedidoService.guardarPedidoCompleto(pedido, carrito);
 
-        // 3. Limpiar el carrito de la sesión
+        // limpia sesión
         session.removeAttribute("carrito");
-        session.setAttribute("cartCount", 0); // Si tienes un contador en el header
+        session.setAttribute("cartCount", 0);
 
-        return "redirect:/cliente/pedidos?success=true";
-    }*/
+        return "redirect:/cliente/pago-exitoso?id=" + pedidoGuardado.getId();
+    }
+
+    @GetMapping("/pago-exitoso")
+    public String pagoExitoso(@RequestParam("id") Integer id, Model model) {
+        model.addAttribute("pedidoId", id);
+        return "cliente/pago-completado";
+    }
     
     @GetMapping("/pedidos")
-    public String misPedidos(Model model, @AuthenticationPrincipal Usuario usuarioLogueado) {
-        // Si por alguna razón la sesión expiró o el objeto es nulo
-        if (usuarioLogueado == null) {
-            return "redirect:/auth/login";
+    public String listarMisPedidos(Model model, 
+                                   @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails) {
+        
+        if (userDetails == null) return "redirect:/auth/login";
+
+        // obtiene el id del usuario real
+        Usuario usuario = usuarioService.buscarPorEmail(userDetails.getUsername()).orElse(null);
+        
+        if (usuario != null) {
+            List<Pedido> misPedidos = pedidoService.obtenerPedidosPorUsuario(usuario.getIdUsuario());
+            model.addAttribute("pedidos", misPedidos);
         }
 
-        try {
-            List<Pedido> misPedidos = pedidoService.obtenerPedidosPorUsuario(usuarioLogueado.getIdUsuario());
-            model.addAttribute("pedidos", misPedidos);
-        } catch (Exception e) {
-            // Esto te ayudará a ver el error real en la consola de STS
-            e.printStackTrace(); 
-            return "error"; 
+        return "cliente/pedidos";
+    }
+    
+    @GetMapping("/pedidos/{id}")
+    public String verDetallePedido(@PathVariable("id") Integer id, 
+                                   Model model, 
+                                   @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails) {
+        
+        // obtiene el pedido por ID
+        Pedido pedido = pedidoService.buscarPedidoPorId(id);
+        
+        // seguridad: Valida que el pedido exista y sea del usuario que consulta
+        if (pedido == null || !pedido.getUsuario().getEmail().equals(userDetails.getUsername())) {
+            return "redirect:/cliente/pedidos";
         }
         
-        return "cliente/pedidos";
+        model.addAttribute("pedido", pedido);
+        return "cliente/detalle-pedido"; 
     }
 }

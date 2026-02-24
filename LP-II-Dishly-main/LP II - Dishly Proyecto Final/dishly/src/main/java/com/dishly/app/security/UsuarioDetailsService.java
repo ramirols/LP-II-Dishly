@@ -27,14 +27,19 @@ public class UsuarioDetailsService implements UserDetailsService{
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Usuario usuario = repo.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Correo no encontrado"));
-		
-        List<GrantedAuthority> authorities = usuario.getRoles()
-                .stream().map(rol ->
-                        new SimpleGrantedAuthority(rol.getNombre())
-                ).collect(Collectors.toList());
-        
-		return new User(usuario.getEmail(), usuario.getContrasenia(), authorities);
+	    Usuario usuario = repo.findByEmail(email)
+	            .orElseThrow(() -> new UsernameNotFoundException("Correo no encontrado"));
+	    
+	    List<GrantedAuthority> authorities = usuario.getRoles()
+	            .stream().map(rol -> {
+	                // el rol debe empezar con ROLE_ segun BD
+	                String nombreRol = rol.getNombre().toUpperCase();
+	                if (!nombreRol.startsWith("ROLE_")) {
+	                    nombreRol = "ROLE_" + nombreRol;
+	                }
+	                return new SimpleGrantedAuthority(nombreRol);
+	            }).collect(Collectors.toList());
+	    
+	    return new User(usuario.getEmail(), usuario.getContrasenia(), authorities);
 	}
-
 }

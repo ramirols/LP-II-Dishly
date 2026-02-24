@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{layout/main}">
+<head>
+    <title>Detalle del Pedido | Dishly</title>
+</head>
+<body>
+    <main layout:fragment="content" class="bg-slate-50 min-h-screen pt-[65px]">
+        <div class="max-w-4xl mx-auto px-4 pt-[50px] pb-[50px]">
+            
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <a href="/cliente/pedidos" class="text-blue-600 text-sm font-bold hover:underline mb-2 inline-block">
+                        <i class="fa-solid fa-arrow-left"></i> Volver a mis pedidos
+                    </a>
+                    <h1 class="text-3xl font-black text-slate-800" th:text="'Orden #' + ${pedido.id}"></h1>
+                </div>
+                <div class="text-right">
+                    <p class="text-slate-500 text-sm" th:text="${#temporals.format(pedido.fechaCreacion, 'dd/MM/yyyy HH:mm')}"></p>
+                    <span th:class="${pedido.estado ? 'text-amber-600 bg-amber-50' : 'text-green-600 bg-green-50'} + ' px-3 py-1 rounded-full text-xs font-bold uppercase'"
+                          th:text="${pedido.estado ? 'En Proceso' : 'Completado'}"></span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 border-b border-slate-100">
+                        <tr>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase">Plato</th>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase text-center">Cantidad</th>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase text-right">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr th:each="detalle : ${pedido.detalles}">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-4">
+                                    <img th:src="@{'/img/platos/' + ${detalle.id.plato.imagen}}" class="w-12 h-12 rounded-xl object-cover">
+                                    <div>
+                                        <p class="font-bold text-slate-800" th:text="${detalle.id.plato.nombre}"></p>
+                                        <p class="text-xs text-slate-400" th:text="'S/ ' + ${detalle.id.plato.precio}"></p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-center font-medium text-slate-600" th:text="${detalle.cantidad}"></td>
+                            <td class="px-6 py-4 text-right font-bold text-slate-800" th:text="'S/ ' + ${#numbers.formatDecimal(detalle.subtotal, 1, 2)}"></td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="bg-slate-50/50">
+                        <tr>
+                            <td colspan="2" class="px-6 py-6 text-right font-bold text-slate-500 uppercase tracking-wider">Total Pagado</td>
+                            <td class="px-6 py-6 text-right font-black text-2xl text-blue-600" th:text="'S/ ' + ${#numbers.formatDecimal(pedido.total, 1, 2)}"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="mt-8 p-6 bg-blue-600 rounded-3xl text-white flex justify-between items-center shadow-lg shadow-blue-200">
+                <div>
+                    <p class="text-blue-100 text-xs font-bold uppercase tracking-widest mb-1">Dirección de Entrega</p>
+                    <p class="font-bold text-lg" th:text="${pedido.direccionEnvio}"></p>
+                </div>
+                <div class="text-right">
+                    <p class="text-blue-100 text-xs font-bold uppercase tracking-widest mb-1">Método de Pago</p>
+                    <p class="font-bold text-lg" th:text="${pedido.metodoPago}"></p>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

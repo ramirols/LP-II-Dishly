@@ -7,8 +7,8 @@
 </head>
 <body>
 
-    <main layout:fragment="content" class="bg-slate-50 min-h-screen py-12">
-        <div class="max-w-5xl mx-auto px-4">
+    <main layout:fragment="content" class="bg-slate-50 min-h-screen pt-[65px]">
+        <div class="max-w-5xl mx-auto px-4 pt-[50px] pb-[50px]">
             
             <div class="mb-8">
                 <h1 class="text-3xl font-black text-slate-800">Mis Pedidos</h1>
@@ -25,20 +25,17 @@
                         </div>
                         
                         <div>
-                            <div class="flex items-center gap-3 mb-1">
-                                <span class="font-bold text-slate-800" th:text="'Orden #' + ${pedido.id}"></span>
-                                
-                                <span th:if="${pedido.estado == 'PENDIENTE'}" class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-amber-100 text-amber-600">
-                                    Pendiente
-                                </span>
-                                <span th:if="${pedido.estado == 'ENTREGADO'}" class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-green-100 text-green-600">
-                                    Entregado
-                                </span>
-                                <span th:if="${pedido.estado == 'CANCELADO'}" class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-red-100 text-red-600">
-                                    Cancelado
-                                </span>
-                            </div>
-                            <p class="text-xs text-slate-400" th:text="${#temporals.format(pedido.fecha, 'dd MMM yyyy, HH:mm')}"></p>
+							<div class="flex items-center gap-3 mb-1">
+							    <span class="font-bold text-slate-800" th:text="'Orden #' + ${pedido.id}"></span>
+							    
+							    <span th:if="${pedido.estado == true}" class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-amber-100 text-amber-600">
+							        En Proceso
+							    </span>
+							    <span th:if="${pedido.estado == false}" class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-green-100 text-green-600">
+							        Completado
+							    </span>
+							</div>
+                            <p class="text-xs text-slate-400" th:text="${#temporals.format(pedido.fechaCreacion, 'dd MMM yyyy, HH:mm')}"></p>
                         </div>
                     </div>
 

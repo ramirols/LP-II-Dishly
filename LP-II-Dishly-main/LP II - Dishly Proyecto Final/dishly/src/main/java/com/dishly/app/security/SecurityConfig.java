@@ -33,8 +33,6 @@ public class SecurityConfig {
                     "/plato/**",
                     "/carrito/**",
                     "/nosotros",
-                    "/programas",
-                    "/soporte",
                     "/auth/**",
                     "/js/**",
                     "/css/**",
@@ -43,11 +41,13 @@ public class SecurityConfig {
 
                 // CHECKOUT
                 .requestMatchers("/cliente/checkout")
-                    .hasAnyRole("CLIENTE", "ADMIN")
+                .authenticated()
 
                 // RUTAS DE CLIENTE
-                .requestMatchers("/cliente/pedidos/**").hasRole("CLIENTE")
-                .requestMatchers("/cliente/**").authenticated()
+                // .requestMatchers("/cliente/pedidos/**").hasRole("CLIENTE")
+                // .requestMatchers("/cliente/**").authenticated()
+                
+                .requestMatchers("/cliente/**").hasRole("CLIENTE")
 
                 // ADMIN exclusivo (platos, categorias, usuarios)
                 .requestMatchers("/admin/platos/**").hasRole("ADMIN")

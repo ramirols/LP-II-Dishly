@@ -1,11 +1,11 @@
 package com.dishly.app.repository;
 
-import java.util.Optional;
-
+import com.dishly.app.model.Rol;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.dishly.app.model.Rol;
+import java.util.Optional;
 
-public interface RolRepository extends JpaRepository<Rol, Integer>{
-	Optional<Rol> findByNombre(String nombre);
+public interface RolRepository extends JpaRepository<Rol, Integer> {
+
+    Optional<Rol> findByNombre(String nombre);
 }

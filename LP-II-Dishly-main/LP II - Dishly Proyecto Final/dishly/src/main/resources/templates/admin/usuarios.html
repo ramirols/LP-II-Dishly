@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dishly · Usuarios</title>
+    <title>Dishly · Staff</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
@@ -20,8 +20,11 @@
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-        .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:50; align-items:center; justify-content:center; }
+        .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);
+                         backdrop-filter:blur(2px); z-index:50; align-items:center; justify-content:center; }
         .modal-overlay.open { display:flex; }
+        .modal-box { background:#fff; border-radius:20px; padding:32px; width:100%;
+                     max-width:480px; box-shadow:0 20px 60px rgba(0,0,0,0.15); }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex">
@@ -35,44 +38,57 @@
     <!-- Header -->
     <div class="flex items-center justify-between mb-8">
         <div>
-            <h1 class="text-2xl font-bold text-slate-800">Usuarios</h1>
-            <p class="text-sm text-slate-400 mt-1">Gestioná los usuarios registrados en la plataforma</p>
+            <h1 class="text-2xl font-bold text-slate-800">Gestion de Staff</h1>
+            <p class="text-sm text-slate-400 mt-1">Trabajadores con acceso al panel de pedidos</p>
         </div>
+        <button id="btnAgregarStaff"
+                class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white
+                       text-sm font-semibold px-5 py-2.5 rounded-xl transition">
+            <i class="fa-solid fa-user-plus"></i>
+            Agregar Staff
+        </button>
     </div>
 
     <!-- Alertas -->
-    <div th:if="${param.eliminado}" class="mb-4 px-5 py-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">
-        ✓ Usuario eliminado correctamente.
+    <div th:if="${param.staffAgregado}"
+         class="mb-4 px-5 py-3 bg-green-50 border border-green-200 text-green-700 rounded-xl text-sm flex items-center gap-2">
+        <i class="fa-solid fa-circle-check"></i> Staff agregado correctamente.
+    </div>
+    <div th:if="${param.staffActualizado}"
+         class="mb-4 px-5 py-3 bg-blue-50 border border-blue-200 text-blue-700 rounded-xl text-sm flex items-center gap-2">
+        <i class="fa-solid fa-circle-check"></i> Staff actualizado correctamente.
+    </div>
+    <div th:if="${param.emailExistente}"
+         class="mb-4 px-5 py-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm flex items-center gap-2">
+        <i class="fa-solid fa-triangle-exclamation"></i> El correo ingresado ya esta registrado en el sistema.
     </div>
 
-    <!-- Stats rápidas -->
+    <!-- KPIs -->
     <div class="grid grid-cols-3 gap-5 mb-6">
         <div class="card p-5">
-            <p class="text-xs text-slate-400 mb-1">Total usuarios</p>
-            <p class="text-2xl font-bold text-slate-800" th:text="${usuarios.size()}">0</p>
+            <p class="text-xs text-slate-400 mb-1">Total Staff</p>
+            <p class="text-2xl font-bold text-slate-800" th:text="${totalStaff}">0</p>
         </div>
         <div class="card p-5">
-            <p class="text-xs text-slate-400 mb-1">Admins</p>
-            <p class="text-2xl font-bold text-indigo-600" th:text="${totalAdmins}">0</p>
+            <p class="text-xs text-slate-400 mb-1">Activos</p>
+            <p class="text-2xl font-bold text-green-600" th:text="${staffActivo}">0</p>
         </div>
         <div class="card p-5">
-            <p class="text-xs text-slate-400 mb-1">Clientes</p>
-            <p class="text-2xl font-bold text-green-600" th:text="${totalClientes}">0</p>
+            <p class="text-xs text-slate-400 mb-1">Inactivos</p>
+            <p class="text-2xl font-bold text-red-500" th:text="${staffInactivo}">0</p>
         </div>
     </div>
 
-    <!-- Tabla usuarios -->
+    <!-- Tabla -->
     <div class="card overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="bg-slate-50 border-b border-slate-100">
                     <tr class="text-left text-xs uppercase tracking-wide text-slate-400">
                         <th class="px-6 py-4">#ID</th>
-                        <th class="px-6 py-4">Usuario</th>
+                        <th class="px-6 py-4">Trabajador</th>
                         <th class="px-6 py-4">Email</th>
-                        <th class="px-6 py-4">Rol</th>
                         <th class="px-6 py-4">Estado</th>
-                        <th class="px-6 py-4">Pedidos</th>
                         <th class="px-6 py-4">Acciones</th>
                     </tr>
                 </thead>
@@ -83,60 +99,64 @@
                         <td class="px-6 py-4 font-mono text-xs text-slate-400"
                             th:text="${usuario.idUsuario}"></td>
 
-                        <!-- Usuario -->
+                        <!-- Nombre -->
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
-                                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500
+                                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-amber-500
                                             flex items-center justify-center text-white text-sm font-bold shrink-0"
                                      th:text="${#strings.substring(usuario.nombre,0,1).toUpperCase()}">?</div>
-                                <span class="font-medium text-slate-700" th:text="${usuario.nombre}">—</span>
+                                <div>
+                                    <p class="font-medium text-slate-700" th:text="${usuario.nombre}">—</p>
+                                    <p class="text-xs text-slate-400">Staff</p>
+                                </div>
                             </div>
                         </td>
 
                         <!-- Email -->
                         <td class="px-6 py-4 text-slate-500" th:text="${usuario.email}">—</td>
 
-                        <!-- Roles -->
-                        <td class="px-6 py-4">
-                            <div class="flex flex-wrap gap-1">
-                                <span th:each="rol : ${usuario.roles}"
-                                      th:text="${rol.nombre.replace('ROLE_','')}"
-                                      th:classappend="${rol.nombre == 'ROLE_ADMIN'} ? 'bg-indigo-100 text-indigo-700' :
-                                                      (${rol.nombre == 'ROLE_STAFF'} ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700')"
-                                      class="badge-pill">
-                                </span>
-                            </div>
-                        </td>
-
                         <!-- Estado -->
                         <td class="px-6 py-4">
-                            <span th:if="${usuario.estado}" class="badge-pill bg-green-100 text-green-700">● Activo</span>
-                            <span th:unless="${usuario.estado}" class="badge-pill bg-red-100 text-red-700">● Inactivo</span>
+                            <span th:if="${usuario.estado}"
+                                  class="badge-pill bg-green-100 text-green-700">● Activo</span>
+                            <span th:unless="${usuario.estado}"
+                                  class="badge-pill bg-red-100 text-red-700">● Inactivo</span>
                         </td>
-
-                        <!-- Pedidos -->
-                        <td class="px-6 py-4 text-slate-600 font-medium"
-                            th:text="${usuario.pedidos != null ? usuario.pedidos.size() : 0}">0</td>
 
                         <!-- Acciones -->
                         <td class="px-6 py-4">
-                            <form th:action="@{/admin/usuarios/eliminar}" method="post"
-                                  onsubmit="return confirm('¿Estás seguro de eliminar este usuario?')">
-                                <input type="hidden" name="id" th:value="${usuario.idUsuario}">
-                                <button type="submit"
-                                        class="text-xs font-medium text-red-500 hover:text-red-700
-                                               bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition">
-                                    <i class="fa-solid fa-trash-can mr-1"></i> Eliminar
+                            <div class="flex items-center gap-2">
+                                <!-- Editar -->
+                                <button
+                                    class="btn-editar text-xs font-medium text-indigo-600 hover:text-indigo-800
+                                           bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition"
+                                    th:data-id="${usuario.idUsuario}"
+                                    th:data-nombre="${usuario.nombre}"
+                                    th:data-email="${usuario.email}">
+                                    <i class="fa-solid fa-pen-to-square mr-1"></i> Editar
                                 </button>
-                            </form>
+                                <!-- Habilitar / Deshabilitar -->
+                                <form th:action="@{/admin/usuarios/estado}" method="post">
+                                    <input type="hidden" name="id" th:value="${usuario.idUsuario}">
+                                    <input type="hidden" name="estado" th:value="${!usuario.estado}">
+                                    <button type="submit"
+                                            th:class="${usuario.estado}
+                                                ? 'text-xs font-medium text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition'
+                                                : 'text-xs font-medium text-green-600 hover:text-green-800 bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded-lg transition'">
+                                        <i th:class="${usuario.estado} ? 'fa-solid fa-ban mr-1' : 'fa-solid fa-circle-check mr-1'"></i>
+                                        <span th:text="${usuario.estado} ? 'Deshabilitar' : 'Habilitar'">Toggle</span>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
 
                     <!-- Empty state -->
                     <tr th:if="${#lists.isEmpty(usuarios)}">
-                        <td colspan="7" class="px-6 py-16 text-center text-slate-400">
-                            <i class="fa-solid fa-users text-3xl mb-3 block"></i>
-                            No hay usuarios registrados
+                        <td colspan="5" class="px-6 py-16 text-center text-slate-400">
+                            <i class="fa-solid fa-user-tie text-3xl mb-3 block"></i>
+                            No hay staff registrado aun.
+                            <span class="block mt-1 text-xs">Usa el boton "Agregar Staff" para crear el primer trabajador.</span>
                         </td>
                     </tr>
                 </tbody>
@@ -144,6 +164,151 @@
         </div>
     </div>
 </main>
+
+<!-- ══════════════════════════════════
+     MODAL: AGREGAR STAFF
+══════════════════════════════════ -->
+<div id="modalAgregar" class="modal-overlay" onclick="cerrarSiOverlay(event, 'modalAgregar')">
+    <div class="modal-box">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
+                    <i class="fa-solid fa-user-plus text-indigo-600"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-800 text-base">Agregar Staff</h3>
+                    <p class="text-xs text-slate-400">Nuevo trabajador con acceso al panel</p>
+                </div>
+            </div>
+            <button onclick="cerrarModal('modalAgregar')"
+                    class="text-slate-400 hover:text-slate-600 transition text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <form th:action="@{/admin/usuarios/staff/agregar}" method="post" class="space-y-4">
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre completo</label>
+                <input type="text" name="nombre" required placeholder="Ej: Juan Perez"
+                       class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm
+                              focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Correo electronico</label>
+                <input type="email" name="email" required placeholder="staff@dishly.com"
+                       class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm
+                              focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Contrasena</label>
+                <input type="password" name="contrasena" required placeholder="Minimo 6 caracteres"
+                       class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm
+                              focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent">
+            </div>
+            <div class="bg-orange-50 border border-orange-100 rounded-xl px-4 py-3">
+                <p class="text-xs text-orange-700 flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    Este usuario se creara con rol <strong>STAFF</strong>: acceso a Pedidos y Reportes unicamente.
+                </p>
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button type="button" onclick="cerrarModal('modalAgregar')"
+                        class="flex-1 border border-slate-200 text-slate-600 font-medium
+                               text-sm py-2.5 rounded-xl hover:bg-slate-50 transition">
+                    Cancelar
+                </button>
+                <button type="submit"
+                        class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold
+                               text-sm py-2.5 rounded-xl transition">
+                    <i class="fa-solid fa-user-plus mr-1"></i> Agregar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════
+     MODAL: EDITAR STAFF
+══════════════════════════════════ -->
+<div id="modalEditar" class="modal-overlay" onclick="cerrarSiOverlay(event, 'modalEditar')">
+    <div class="modal-box">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                    <i class="fa-solid fa-pen-to-square text-blue-600"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-800 text-base">Editar Staff</h3>
+                    <p class="text-xs text-slate-400" id="editarSubtitulo">Modificar datos del trabajador</p>
+                </div>
+            </div>
+            <button onclick="cerrarModal('modalEditar')"
+                    class="text-slate-400 hover:text-slate-600 transition text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <form th:action="@{/admin/usuarios/staff/editar}" method="post" class="space-y-4">
+            <input type="hidden" name="id" id="editarId">
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre completo</label>
+                <input type="text" name="nombre" id="editarNombre" required
+                       class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm
+                              focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Correo electronico</label>
+                <input type="email" name="email" id="editarEmail" required
+                       class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm
+                              focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">
+                    Nueva contrasena
+                    <span class="text-slate-400 font-normal">(dejar en blanco para no cambiar)</span>
+                </label>
+                <input type="password" name="contrasena" placeholder="Nueva contrasena (opcional)"
+                       class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm
+                              focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button type="button" onclick="cerrarModal('modalEditar')"
+                        class="flex-1 border border-slate-200 text-slate-600 font-medium
+                               text-sm py-2.5 rounded-xl hover:bg-slate-50 transition">
+                    Cancelar
+                </button>
+                <button type="submit"
+                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold
+                               text-sm py-2.5 rounded-xl transition">
+                    <i class="fa-solid fa-floppy-disk mr-1"></i> Guardar cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Agregar Staff
+document.getElementById('btnAgregarStaff').addEventListener('click', function() {
+    document.getElementById('modalAgregar').classList.add('open');
+});
+
+// Editar Staff — lee los data-* del boton
+document.querySelectorAll('.btn-editar').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        document.getElementById('editarId').value     = this.dataset.id;
+        document.getElementById('editarNombre').value = this.dataset.nombre;
+        document.getElementById('editarEmail').value  = this.dataset.email;
+        document.getElementById('editarSubtitulo').textContent = 'Editando: ' + this.dataset.nombre;
+        document.getElementById('modalEditar').classList.add('open');
+    });
+});
+
+function cerrarModal(id) {
+    document.getElementById(id).classList.remove('open');
+}
+function cerrarSiOverlay(event, id) {
+    if (event.target === document.getElementById(id)) cerrarModal(id);
+}
+</script>
 
 </body>
 </html>

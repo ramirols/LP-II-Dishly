@@ -13,17 +13,21 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.dishly.app.model.Pedido;
+import com.dishly.app.model.Rol;
 import com.dishly.app.model.Usuario;
+import com.dishly.app.repository.DetallePedidoRepository;
+import com.dishly.app.repository.RolRepository;
 import com.dishly.app.service.IPdfServicio;
 import com.dishly.app.service.PedidoService;
 import com.dishly.app.service.PlatoService;
 import com.dishly.app.service.UsuarioService;
-import com.dishly.app.repository.DetallePedidoRepository;
+import com.dishly.app.service.CategoriaService;
 
 @Controller
 @RequestMapping("/admin")
@@ -34,9 +38,11 @@ public class AdminController {
     @Autowired private UsuarioService          usuarioService;
     @Autowired private IPdfServicio            pdfServicio;
     @Autowired private DetallePedidoRepository detallePedidoRepository;
-    @Autowired private com.dishly.app.service.CategoriaService categoriaService;
+    @Autowired private CategoriaService        categoriaService;
+    @Autowired private PasswordEncoder         passwordEncoder;
+    @Autowired private RolRepository           rolRepository;
 
-    // ─── Nombre del admin logueado ───
+    // ─── Nombre del admin logueado ────────────────────────────────
     private String getAdminNombre() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth != null ? auth.getName() : "";
@@ -45,25 +51,23 @@ public class AdminController {
                 .orElse("Administrador");
     }
 
-    // ─── Helper: construir lista de top platos desde query ───
+    // ─── Top 5 platos mas pedidos ─────────────────────────────────
     private List<Map<String, Object>> buildTopPlatos() {
         List<Object[]> raw = detallePedidoRepository.findTopPlatos();
 
-        // Calculamos el total general para el porcentaje de la barra
         long totalCantidad = raw.stream()
                 .mapToLong(r -> ((Number) r[1]).longValue())
                 .sum();
 
         List<Map<String, Object>> topPlatos = new ArrayList<>();
-        int limite = Math.min(raw.size(), 5); // top 5
+        int limite = Math.min(raw.size(), 5);
 
         for (int i = 0; i < limite; i++) {
             Object[] row = raw.get(i);
-            String nombre    = (String) row[0];
-            long   cantidad  = ((Number) row[1]).longValue();
-            BigDecimal total = new BigDecimal(row[2].toString())
-                                   .setScale(2, RoundingMode.HALF_UP);
-            double porcentaje = totalCantidad > 0
+            String    nombre    = (String) row[0];
+            long      cantidad  = ((Number) row[1]).longValue();
+            BigDecimal total    = new BigDecimal(row[2].toString()).setScale(2, RoundingMode.HALF_UP);
+            double porcentaje   = totalCantidad > 0
                     ? Math.round((cantidad * 100.0 / totalCantidad) * 10.0) / 10.0
                     : 0.0;
 
@@ -77,9 +81,9 @@ public class AdminController {
         return topPlatos;
     }
 
-    // ══════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════
     //  DASHBOARD
-    // ══════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         List<Pedido> todos = pedidoService.listarTodo();
@@ -94,7 +98,6 @@ public class AdminController {
         long completados   = todos.stream().filter(Pedido::isEstado).count();
         long pendientes    = totalPedidos - completados;
 
-        // Últimos 10 pedidos
         List<Pedido> ultimosPedidos = todos.stream()
                 .sorted((a, b) -> {
                     if (a.getFechaCreacion() == null) return 1;
@@ -103,7 +106,7 @@ public class AdminController {
                 })
                 .limit(10).collect(Collectors.toList());
 
-        // Ventas por mes (últimos 6)
+        // Ventas por mes (ultimos 6)
         List<String> mesesLabels  = new ArrayList<>();
         List<Double> ventasPorMes = new ArrayList<>();
         LocalDateTime ahora = LocalDateTime.now();
@@ -133,9 +136,9 @@ public class AdminController {
         return "admin/dashboard";
     }
 
-    // ══════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════
     //  PEDIDOS — Listar con filtro
-    // ══════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════
     @GetMapping("/pedidos")
     public String pedidos(@RequestParam(required = false) String filtro, Model model) {
         List<Pedido> todos = pedidoService.listarTodo();
@@ -162,9 +165,9 @@ public class AdminController {
         return "admin/pedidos";
     }
 
-    // ══════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════
     //  PEDIDOS — Cambiar estado
-    // ══════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════
     @PostMapping("/pedidos/estado")
     public String cambiarEstado(@RequestParam Integer id, @RequestParam boolean estado) {
         Pedido pedido = pedidoService.buscarPedidoPorId(id);
@@ -175,39 +178,95 @@ public class AdminController {
         return "redirect:/admin/pedidos?success";
     }
 
-    // ══════════════════════════════════════
-    //  USUARIOS — Listar
-    // ══════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════
+    //  STAFF — Listar (solo ROLE_STAFF)
+    // ══════════════════════════════════════════════════════════════
     @GetMapping("/usuarios")
     public String usuarios(Model model) {
-        List<Usuario> usuarios = usuarioService.listarTodo();
+        List<Usuario> todos = usuarioService.listarTodo();
 
-        long totalAdmins = usuarios.stream()
-                .filter(u -> u.getRoles().stream().anyMatch(r -> r.getNombre().equals("ROLE_ADMIN")))
-                .count();
-        long totalClientes = usuarios.stream()
-                .filter(u -> u.getRoles().stream().anyMatch(r -> r.getNombre().equals("ROLE_CLIENTE")))
-                .count();
+        List<Usuario> staff = todos.stream()
+                .filter(u -> u.getRoles().stream()
+                        .anyMatch(r -> r.getNombre().equals("ROLE_STAFF")))
+                .collect(Collectors.toList());
+
+        long staffActivo   = staff.stream().filter(Usuario::isEstado).count();
+        long staffInactivo = staff.stream().filter(u -> !u.isEstado()).count();
 
         model.addAttribute("adminNombre",   getAdminNombre());
-        model.addAttribute("usuarios",      usuarios);
-        model.addAttribute("totalAdmins",   totalAdmins);
-        model.addAttribute("totalClientes", totalClientes);
+        model.addAttribute("usuarios",      staff);
+        model.addAttribute("totalStaff",    staff.size());
+        model.addAttribute("staffActivo",   staffActivo);
+        model.addAttribute("staffInactivo", staffInactivo);
         return "admin/usuarios";
     }
 
-    // ══════════════════════════════════════
-    //  USUARIOS — Eliminar
-    // ══════════════════════════════════════
-    @PostMapping("/usuarios/eliminar")
-    public String eliminarUsuario(@RequestParam Integer id) {
-        usuarioService.eliminarUsuarioPorId(id);
-        return "redirect:/admin/usuarios?eliminado";
+    // ══════════════════════════════════════════════════════════════
+    //  STAFF — Agregar
+    // ══════════════════════════════════════════════════════════════
+    @PostMapping("/usuarios/staff/agregar")
+    public String agregarStaff(@RequestParam String nombre,
+                                @RequestParam String email,
+                                @RequestParam String contrasena) {
+        if (usuarioService.buscarPorEmail(email).isPresent()) {
+            return "redirect:/admin/usuarios?emailExistente";
+        }
+
+        Rol rolStaff = rolRepository.findByNombre("ROLE_STAFF")
+                .orElseThrow(() -> new RuntimeException("Rol STAFF no encontrado en BD"));
+
+        Usuario nuevo = new Usuario();
+        nuevo.setNombre(nombre);
+        nuevo.setEmail(email);
+        nuevo.setContrasenia(passwordEncoder.encode(contrasena));
+        nuevo.setEstado(true);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rolStaff);
+        nuevo.setRoles(roles);
+
+        usuarioService.actualizarUsuario(nuevo);
+        return "redirect:/admin/usuarios?staffAgregado";
     }
 
-    // ══════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════
+    //  STAFF — Editar
+    // ══════════════════════════════════════════════════════════════
+    @PostMapping("/usuarios/staff/editar")
+    public String editarStaff(@RequestParam Integer id,
+                               @RequestParam String nombre,
+                               @RequestParam String email,
+                               @RequestParam(required = false) String contrasena) {
+        Usuario usuario = usuarioService.buscarPorId(id);
+        if (usuario == null) return "redirect:/admin/usuarios";
+
+        usuario.setNombre(nombre);
+        usuario.setEmail(email);
+
+        if (contrasena != null && !contrasena.isBlank()) {
+            usuario.setContrasenia(passwordEncoder.encode(contrasena));
+        }
+
+        usuarioService.actualizarUsuario(usuario);
+        return "redirect:/admin/usuarios?staffActualizado";
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    //  STAFF — Habilitar / Deshabilitar
+    // ══════════════════════════════════════════════════════════════
+    @PostMapping("/usuarios/estado")
+    public String cambiarEstadoUsuario(@RequestParam Integer id,
+                                        @RequestParam boolean estado) {
+        Usuario usuario = usuarioService.buscarPorId(id);
+        if (usuario != null) {
+            usuario.setEstado(estado);
+            usuarioService.actualizarUsuario(usuario);
+        }
+        return "redirect:/admin/usuarios?staffActualizado";
+    }
+
+    // ══════════════════════════════════════════════════════════════
     //  CATEGORIAS
-    // ══════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════
     @GetMapping("/categorias")
     public String categorias(Model model) {
         model.addAttribute("adminNombre",  getAdminNombre());
@@ -216,9 +275,9 @@ public class AdminController {
         return "admin/categorias";
     }
 
-    // ══════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════
     //  REPORTES — Vista
-    // ══════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════
     @GetMapping("/reportes")
     public String reportes(Model model) {
         List<Pedido> todos = pedidoService.listarTodo();
@@ -237,7 +296,6 @@ public class AdminController {
                 ? Math.round((completados * 100.0 / totalPedidos) * 10.0) / 10.0
                 : 0.0;
 
-        // Ventas por mes
         List<String> mesesLabels  = new ArrayList<>();
         List<Double> ventasPorMes = new ArrayList<>();
         LocalDateTime ahora = LocalDateTime.now();
@@ -253,7 +311,6 @@ public class AdminController {
             ventasPorMes.add(Math.round(suma * 100.0) / 100.0);
         }
 
-        // Métodos de pago
         Map<String, Long> pagoMap = todos.stream()
                 .filter(p -> p.getMetodoPago() != null)
                 .collect(Collectors.groupingBy(Pedido::getMetodoPago, Collectors.counting()));
@@ -273,9 +330,9 @@ public class AdminController {
         return "admin/reportes";
     }
 
-    // ══════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════
     //  REPORTES — Exportar PDF
-    // ══════════════════════════════════════
+    // ══════════════════════════════════════════════════════════════
     @GetMapping("/reportes/exportar/pdf")
     public ResponseEntity<byte[]> exportarPdf() {
         List<Pedido> pedidos = pedidoService.listarTodo();
