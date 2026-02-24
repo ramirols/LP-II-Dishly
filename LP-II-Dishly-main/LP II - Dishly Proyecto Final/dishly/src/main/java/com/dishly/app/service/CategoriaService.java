@@ -1,0 +1,17 @@
+package com.dishly.app.service;
+
+import java.util.List;
+
+import com.dishly.app.model.Categoria;
+
+public interface CategoriaService {
+	public List<Categoria> listarTodo();
+	
+	public Categoria buscarCategoriaPorId(Integer id);
+	
+	public Categoria guardarCategoria(Categoria categoria);
+	
+	public void eliminarCategoria(Categoria categoria);
+	
+	public void eliminarCategoriaPorId(Integer id);
+}
