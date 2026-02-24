@@ -75,7 +75,6 @@ public class SecurityConfig {
                         response.sendRedirect("/");
                     }
                 })
-                .failureUrl("/?error=true")
                 .permitAll()
             )
             .exceptionHandling(ex -> ex
