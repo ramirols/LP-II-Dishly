@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <meta charset="UTF-8">
+    <title>Nosotros | Dishly</title>
+</head>
+<body>
+
+    <main layout:fragment="content" class="flex-1 pt-[65px]">
+        
+        <section class="relative py-20 bg-blue-600 overflow-hidden">
+            <div class="absolute inset-0 opacity-10">
+                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1920&q=80" class="w-full h-full object-cover">
+            </div>
+            <div class="max-w-4xl mx-auto px-4 relative text-center">
+                <span class="text-blue-200 font-bold uppercase tracking-widest text-sm">Nuestra Historia</span>
+                <h1 class="text-5xl font-black text-white mt-4 mb-6 leading-tight">Redefiniendo la experiencia gastronómica con Dishly</h1>
+                <p class="text-xl text-blue-100 leading-relaxed">
+                    Dishly nació como un proyecto apasionado para conectar a los amantes del buen sabor con la comodidad tecnológica, 
+                    garantizando calidad en cada bocado.
+                </p>
+            </div>
+        </section>
+
+        <section class="py-20 max-w-6xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="text-center group">
+                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+                        <i class="fa-solid fa-utensils text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Calidad Premium</h3>
+                    <p class="text-slate-500">Seleccionamos cada plato de nuestro menú con estándares rigurosos de frescura y sabor.</p>
+                </div>
+
+                <div class="text-center group">
+                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+                        <i class="fa-solid fa-bolt text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Rapidez y Eficiencia</h3>
+                    <p class="text-slate-500">Nuestra plataforma está optimizada para que pidas en segundos y disfrutes en minutos.</p>
+                </div>
+
+                <div class="text-center group">
+                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+                        <i class="fa-solid fa-heart text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Pasión Local</h3>
+                    <p class="text-slate-500">Apoyamos el talento gastronómico local, llevando lo mejor de la zona directamente a tu mesa.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-20 bg-slate-50">
+            <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center gap-16">
+                <div class="md:w-1/2">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=800&q=80" class="rounded-[2.5rem] shadow-2xl relative z-10">
+                        <div class="absolute -bottom-6 -right-6 w-48 h-48 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 space-y-6">
+                    <h2 class="text-4xl font-bold text-slate-800">¿Por qué Dishly?</h2>
+                    <p class="text-slate-600 text-lg leading-relaxed">
+                        En el corazón de <strong>Dishly</strong> está la idea de que pedir comida no debería ser un proceso tedioso. 
+                        Hemos diseñado este sistema desde cero usando Spring Boot para asegurar robustez, 
+                        y una interfaz moderna para que la navegación sea intuitiva.
+                    </p>
+                    <div class="pt-4 border-l-4 border-blue-600 pl-6 italic text-slate-500">
+                        "Nuestra misión es transformar la manera en que los restaurantes interactúan con sus clientes digitales."
+                    </div>
+                    <div class="pt-6">
+                        <a href="/#menu" class="inline-flex items-center gap-2 bg-[#2563eb] text-white px-8 py-3 rounded-full font-bold hover:bg-[#2563eb]/80 transition">
+                            Ver nuestros platos <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main> </body>
+</html>
