@@ -112,7 +112,7 @@
 
                         <!-- Imagen -->
                         <td class="px-6 py-4">
-                            <img th:src="${plato.imagen != null ? plato.imagen : '/img/placeholder.png'}"
+                            <img th:src="${plato.imagen != null ? '/img/' + plato.imagen : '/img/placeholder.png'}"
                                  onerror="this.src='/img/placeholder.png'"
                                  class="w-12 h-12 rounded-xl object-cover shadow-sm bg-slate-100">
                         </td>

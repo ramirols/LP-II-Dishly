@@ -36,7 +36,7 @@
                         <tr th:each="detalle : ${pedido.detalles}">
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-4">
-                                    <img th:src="@{'/img/platos/' + ${detalle.id.plato.imagen}}" class="w-12 h-12 rounded-xl object-cover">
+                                    <img th:src="@{'/img/' + ${detalle.id.plato.imagen}}" class="w-12 h-12 rounded-xl object-cover">
                                     <div>
                                         <p class="font-bold text-slate-800" th:text="${detalle.id.plato.nombre}"></p>
                                         <p class="text-xs text-slate-400" th:text="'S/ ' + ${detalle.id.plato.precio}"></p>
