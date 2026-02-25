@@ -32,7 +32,7 @@ public class PlatoController {
     @Autowired UsuarioService   usuarioService;
 
     // Carpeta destino dentro del proyecto
-    private static final String IMG_DIR = "src/main/resources/static/img/platos/";
+    private static final String IMG_DIR = "src/main/resources/static/img/";
 
     // ── Listar ───────────────────────────────────────────
     @GetMapping("/inicio")
@@ -64,7 +64,7 @@ public class PlatoController {
             // Subieron imagen nueva — guardar en disco
             String nombreArchivo = guardarImagen(imagenFile);
             if (nombreArchivo != null) {
-                plato.setImagen("/img/platos/" + nombreArchivo);
+            	plato.setImagen("/img/" + nombreArchivo);
             }
         } else if (platoDTO.getImagenUrl() != null && !platoDTO.getImagenUrl().isBlank()) {
             // Sin imagen nueva — conservar la existente
