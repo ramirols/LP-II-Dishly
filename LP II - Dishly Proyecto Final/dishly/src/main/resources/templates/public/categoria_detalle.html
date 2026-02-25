@@ -41,7 +41,7 @@
 
           <!-- Imagen -->
           <div class="relative">
-            <img th:src="@{/images/{img}(img=${plato.imagen})}"
+            <img th:src="@{/img/{img}(img=${plato.imagen})}"
                  class="w-full h-52 object-cover">
 
             <span th:if="${plato.estado}"
