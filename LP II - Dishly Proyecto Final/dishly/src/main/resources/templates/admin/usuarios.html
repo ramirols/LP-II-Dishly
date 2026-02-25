@@ -8,24 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        * { font-family: 'DM Sans', sans-serif; }
-        .font-display { font-family: 'Syne', sans-serif; }
-        .sidebar { background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); }
-        .nav-link { transition: all 0.2s; border-radius: 12px; color: #94a3b8; }
-        .nav-link:hover, .nav-link.active { background: rgba(99,102,241,0.15); color: #fff; }
-        .nav-link.active { background: rgba(99,102,241,0.2); border-left: 3px solid #6366f1; }
-        .card { background:#fff; border-radius:20px; border:1px solid #f1f5f9; box-shadow:0 2px 12px rgba(0,0,0,0.04); }
-        .badge-pill { font-size:11px; padding:3px 12px; border-radius:999px; font-weight:600; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-        .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);
-                         backdrop-filter:blur(2px); z-index:50; align-items:center; justify-content:center; }
-        .modal-overlay.open { display:flex; }
-        .modal-box { background:#fff; border-radius:20px; padding:32px; width:100%;
-                     max-width:480px; box-shadow:0 20px 60px rgba(0,0,0,0.15); }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/usuarios.css}">
 </head>
 <body class="bg-slate-50 min-h-screen flex">
 
@@ -285,30 +268,7 @@
     </div>
 </div>
 
-<script>
-// Agregar Staff
-document.getElementById('btnAgregarStaff').addEventListener('click', function() {
-    document.getElementById('modalAgregar').classList.add('open');
-});
-
-// Editar Staff — lee los data-* del boton
-document.querySelectorAll('.btn-editar').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-        document.getElementById('editarId').value     = this.dataset.id;
-        document.getElementById('editarNombre').value = this.dataset.nombre;
-        document.getElementById('editarEmail').value  = this.dataset.email;
-        document.getElementById('editarSubtitulo').textContent = 'Editando: ' + this.dataset.nombre;
-        document.getElementById('modalEditar').classList.add('open');
-    });
-});
-
-function cerrarModal(id) {
-    document.getElementById(id).classList.remove('open');
-}
-function cerrarSiOverlay(event, id) {
-    if (event.target === document.getElementById(id)) cerrarModal(id);
-}
-</script>
+<script th:src="@{/js/dashboard/usuarios.js}"></script>
 
 </body>
 </html>

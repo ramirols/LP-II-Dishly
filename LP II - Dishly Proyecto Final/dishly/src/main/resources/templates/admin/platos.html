@@ -1,193 +1,23 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dishly · Platos</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link
-	href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<style>
-* {
-	font-family: 'DM Sans', sans-serif;
-}
-
-.sidebar {
-	background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
-}
-
-.nav-link {
-	transition: all 0.2s;
-	border-radius: 12px;
-	color: #94a3b8;
-}
-
-.nav-link:hover, .nav-link.active {
-	background: rgba(99, 102, 241, 0.15);
-	color: #fff;
-}
-
-.nav-link.active {
-	background: rgba(99, 102, 241, 0.2);
-	border-left: 3px solid #6366f1;
-}
-
-.card {
-	background: #fff;
-	border-radius: 20px;
-	border: 1px solid #f1f5f9;
-	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-}
-
-.badge-pill {
-	font-size: 11px;
-	padding: 3px 12px;
-	border-radius: 999px;
-	font-weight: 600;
-}
-
-::-webkit-scrollbar {
-	width: 6px;
-}
-
-::-webkit-scrollbar-track {
-	background: #f1f5f9;
-}
-
-::-webkit-scrollbar-thumb {
-	background: #cbd5e1;
-	border-radius: 3px;
-}
-
-.modal-overlay {
-	display: none;
-	position: fixed;
-	inset: 0;
-	background: rgba(0, 0, 0, 0.5);
-	backdrop-filter: blur(4px);
-	z-index: 100;
-	align-items: center;
-	justify-content: center;
-}
-
-.modal-overlay.open {
-	display: flex;
-}
-
-.modal-box {
-	background: #fff;
-	border-radius: 20px;
-	padding: 2rem;
-	width: 100%;
-	max-width: 480px;
-	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-}
-
-.modal-box-lg {
-	background: #fff;
-	border-radius: 20px;
-	padding: 2rem;
-	width: 100%;
-	max-width: 700px;
-	max-height: 85vh;
-	overflow-y: auto;
-	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-}
-
-.input-field {
-	width: 100%;
-	padding: 10px 14px;
-	border: 1px solid #e2e8f0;
-	border-radius: 10px;
-	font-size: 14px;
-	outline: none;
-	transition: border 0.2s;
-}
-
-.input-field:focus {
-	border-color: #6366f1;
-}
-
-.btn-primary {
-	background: #6366f1;
-	color: #fff;
-	padding: 10px 20px;
-	border-radius: 10px;
-	font-size: 14px;
-	font-weight: 600;
-	border: none;
-	cursor: pointer;
-	transition: background 0.2s;
-}
-
-.btn-primary:hover {
-	background: #4f46e5;
-}
-
-.btn-danger {
-	background: #ef4444;
-	color: #fff;
-	padding: 10px 20px;
-	border-radius: 10px;
-	font-size: 14px;
-	font-weight: 600;
-	border: none;
-	cursor: pointer;
-	transition: background 0.2s;
-}
-
-.btn-danger:hover {
-	background: #dc2626;
-}
-
-.btn-ghost {
-	background: #f1f5f9;
-	color: #64748b;
-	padding: 10px 20px;
-	border-radius: 10px;
-	font-size: 14px;
-	font-weight: 600;
-	border: none;
-	cursor: pointer;
-	transition: background 0.2s;
-}
-
-.btn-ghost:hover {
-	background: #e2e8f0;
-}
-
-/* Upload area */
-.upload-area {
-	border: 2px dashed #e2e8f0;
-	border-radius: 12px;
-	padding: 16px;
-	text-align: center;
-	cursor: pointer;
-	transition: border-color 0.2s, background 0.2s;
-}
-
-.upload-area:hover {
-	border-color: #6366f1;
-	background: #f5f3ff;
-}
-
-.upload-area.has-image {
-	border-style: solid;
-	border-color: #6366f1;
-	padding: 8px;
-}
-</style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Dishly · Platos</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link
+		href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+	<link rel="stylesheet" th:href="@{/css/platos.css}">
 </head>
+
 <body class="bg-slate-50 min-h-screen flex">
 
 	<!-- SIDEBAR -->
-	<div
-		th:replace="~{admin/fragments/sidebar :: sidebar(activeMenu='platos')}"></div>
+	<div th:replace="~{admin/fragments/sidebar :: sidebar(activeMenu='platos')}"></div>
 
 	<!-- MAIN -->
 	<main class="ml-64 flex-1 p-8">
@@ -200,13 +30,11 @@
 					plataforma</p>
 			</div>
 			<div class="flex gap-3">
-				<button onclick="abrirModalCategoria()"
-					class="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200
+				<button onclick="abrirModalCategoria()" class="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200
                            text-slate-700 text-sm font-semibold rounded-xl transition">
 					<i class="fa-solid fa-tags"></i> Categorías
 				</button>
-				<button onclick="abrirModalAgregar()"
-					class="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700
+				<button onclick="abrirModalAgregar()" class="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700
                            text-white text-sm font-semibold rounded-xl transition shadow-lg shadow-indigo-100">
 					<i class="fa-solid fa-plus"></i> Agregar plato
 				</button>
@@ -232,8 +60,7 @@
 			<div class="overflow-x-auto">
 				<table class="w-full text-sm">
 					<thead class="bg-slate-50 border-b border-slate-100">
-						<tr
-							class="text-left text-xs uppercase tracking-wide text-slate-400">
+						<tr class="text-left text-xs uppercase tracking-wide text-slate-400">
 							<th class="px-6 py-4">Imagen</th>
 							<th class="px-6 py-4">Nombre</th>
 							<th class="px-6 py-4">Precio</th>
@@ -243,50 +70,41 @@
 						</tr>
 					</thead>
 					<tbody class="divide-y divide-slate-50">
-						<tr th:each="plato : ${platos}"
-							class="hover:bg-slate-50 transition">
+						<tr th:each="plato : ${platos}" class="hover:bg-slate-50 transition">
 
 							<!-- Imagen -->
 							<td class="px-6 py-4"><img
-								th:src="${plato.imagen != null ? plato.imagen : '/img/placeholder.png'}"
-								onerror="this.src='/img/placeholder.png'"
-								class="w-12 h-12 rounded-xl object-cover shadow-sm bg-slate-100">
+									th:src="${plato.imagen != null ? '/img/' + plato.imagen : '/img/placeholder.png'}"
+									onerror="this.src='/img/placeholder.png'"
+									class="w-12 h-12 rounded-xl object-cover shadow-sm bg-slate-100">
 							</td>
 
 							<!-- Nombre -->
-							<td class="px-6 py-4 font-semibold text-slate-800"
-								th:text="${plato.nombre}">—</td>
+							<td class="px-6 py-4 font-semibold text-slate-800" th:text="${plato.nombre}">—</td>
 
 							<!-- Precio -->
-							<td class="px-6 py-4 font-semibold text-indigo-600"
-								th:text="'S/ ' + ${plato.precio}">—</td>
+							<td class="px-6 py-4 font-semibold text-indigo-600" th:text="'S/ ' + ${plato.precio}">—</td>
 
 							<!-- Categoría -->
-							<td class="px-6 py-4"><span
-								class="badge-pill bg-slate-100 text-slate-600"
-								th:text="${plato.categoria.nombre}">—</span></td>
+							<td class="px-6 py-4"><span class="badge-pill bg-slate-100 text-slate-600"
+									th:text="${plato.categoria.nombre}">—</span></td>
 
 							<!-- Estado -->
 							<td class="px-6 py-4"><span th:if="${plato.estado}"
-								class="badge-pill bg-green-100 text-green-700">● Activo</span> <span
-								th:unless="${plato.estado}"
-								class="badge-pill bg-red-100 text-red-700">● Inactivo</span></td>
+									class="badge-pill bg-green-100 text-green-700">● Activo</span> <span
+									th:unless="${plato.estado}" class="badge-pill bg-red-100 text-red-700">●
+									Inactivo</span></td>
 
 							<!-- Acciones -->
 							<td class="px-6 py-4">
 								<div class="flex gap-2">
-									<button type="button" th:data-id="${plato.id}"
-										th:data-nombre="${plato.nombre}"
-										th:data-precio="${plato.precio}"
-										th:data-idcategoria="${plato.categoria.id}"
-										th:data-imgurl="${plato.imagen}"
-										onclick="abrirModalEditar(this)"
-										class="text-xs font-medium text-indigo-600 hover:text-indigo-800
+									<button type="button" th:data-id="${plato.id}" th:data-nombre="${plato.nombre}"
+										th:data-precio="${plato.precio}" th:data-idcategoria="${plato.categoria.id}"
+										th:data-imgurl="${plato.imagen}" onclick="abrirModalEditar(this)" class="text-xs font-medium text-indigo-600 hover:text-indigo-800
                                                bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition">
 										<i class="fa-solid fa-pen mr-1"></i> Editar
 									</button>
-									<button type="button" th:data-id="${plato.id}"
-										onclick="abrirModalEliminar(this)"
+									<button type="button" th:data-id="${plato.id}" onclick="abrirModalEliminar(this)"
 										class="text-xs font-medium text-red-500 hover:text-red-700
                                                bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition">
 										<i class="fa-solid fa-trash-can mr-1"></i> Eliminar
@@ -315,16 +133,14 @@
 			<div class="flex items-center justify-between mb-6">
 				<h2 class="text-lg font-bold text-slate-800" id="modalGuardarTitulo">Agregar
 					plato</h2>
-				<button onclick="cerrarModalEditar()"
-					class="text-slate-400 hover:text-slate-600">
+				<button onclick="cerrarModalEditar()" class="text-slate-400 hover:text-slate-600">
 					<i class="fa-solid fa-xmark text-xl"></i>
 				</button>
 			</div>
 
 			<!-- enctype multipart obligatorio para subir archivos -->
-			<form method="post" enctype="multipart/form-data"
-				th:object="${platoDTO}" th:action="@{/admin/platos/guardar}"
-				class="space-y-4">
+			<form method="post" enctype="multipart/form-data" th:object="${platoDTO}"
+				th:action="@{/admin/platos/guardar}" class="space-y-4">
 
 				<input type="hidden" th:field="*{id}" id="idplato" />
 				<!-- Guarda la ruta de imagen actual para no perderla al editar sin cambiar imagen -->
@@ -332,23 +148,21 @@
 
 				<div>
 					<label class="text-sm font-medium text-slate-700 block mb-1">Nombre</label>
-					<input th:field="*{nombrePlato}" type="text" id="platoNombre"
-						class="input-field" placeholder="Ej: Lomo Saltado" required>
+					<input th:field="*{nombrePlato}" type="text" id="platoNombre" class="input-field"
+						placeholder="Ej: Lomo Saltado" required>
 				</div>
 
 				<div>
 					<label class="text-sm font-medium text-slate-700 block mb-1">Precio
-						(S/)</label> <input th:field="*{precio}" type="text" id="platoPrecio"
-						class="input-field" placeholder="Ej: 25.00" required>
+						(S/)</label> <input th:field="*{precio}" type="text" id="platoPrecio" class="input-field"
+						placeholder="Ej: 25.00" required>
 				</div>
 
 				<div>
 					<label class="text-sm font-medium text-slate-700 block mb-1">Categoría</label>
-					<select th:field="*{idCategoria}" id="categorias"
-						class="input-field" required>
+					<select th:field="*{idCategoria}" id="categorias" class="input-field" required>
 						<option value="">Seleccioná una categoría</option>
-						<option th:each="cat : ${categorias}" th:value="${cat.id}"
-							th:text="${cat.nombre}"></option>
+						<option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}"></option>
 					</select>
 				</div>
 
@@ -366,19 +180,15 @@
 					<!-- Area de carga -->
 					<label for="imagenFile" class="upload-area block" id="uploadArea">
 						<div id="uploadPlaceholder">
-							<i
-								class="fa-solid fa-cloud-arrow-up text-slate-400 text-2xl mb-1"></i>
+							<i class="fa-solid fa-cloud-arrow-up text-slate-400 text-2xl mb-1"></i>
 							<p class="text-xs text-slate-500 mt-1">Clic para subir imagen</p>
 							<p class="text-xs text-slate-400">JPG, PNG, WEBP</p>
-						</div> <img id="imgNuevaPreview"
-						class="hidden w-full h-32 object-cover rounded-xl">
-					</label> <input type="file" id="imagenFile" name="imagenFile"
-						accept="image/*" class="hidden">
+						</div> <img id="imgNuevaPreview" class="hidden w-full h-32 object-cover rounded-xl">
+					</label> <input type="file" id="imagenFile" name="imagenFile" accept="image/*" class="hidden">
 				</div>
 
 				<div class="flex justify-end gap-3 pt-2">
-					<button type="button" onclick="cerrarModalEditar()"
-						class="btn-ghost">Cancelar</button>
+					<button type="button" onclick="cerrarModalEditar()" class="btn-ghost">Cancelar</button>
 					<button type="submit" class="btn-primary">
 						<i class="fa-solid fa-floppy-disk mr-1"></i> Guardar
 					</button>
@@ -393,20 +203,17 @@
 	<div id="modalEliminar" class="modal-overlay">
 		<div class="modal-box" style="max-width: 380px">
 			<div class="text-center mb-6">
-				<div
-					class="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+				<div class="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
 					<i class="fa-solid fa-trash-can text-red-500 text-2xl"></i>
 				</div>
 				<h2 class="text-lg font-bold text-slate-800">¿Eliminar plato?</h2>
 				<p class="text-sm text-slate-400 mt-1">Esta acción no se puede
 					deshacer.</p>
 			</div>
-			<form method="post" th:object="${platoDTO}"
-				th:action="@{/admin/platos/eliminar}">
+			<form method="post" th:object="${platoDTO}" th:action="@{/admin/platos/eliminar}">
 				<input type="hidden" th:field="*{id}" id="platoEliminar" />
 				<div class="flex justify-center gap-3">
-					<button type="button" onclick="cerrarModalEliminar()"
-						class="btn-ghost">Cancelar</button>
+					<button type="button" onclick="cerrarModalEliminar()" class="btn-ghost">Cancelar</button>
 					<button type="submit" class="btn-danger">Sí, eliminar</button>
 				</div>
 			</form>
@@ -422,13 +229,11 @@
 				<h2 class="text-lg font-bold text-slate-800">Gestión de
 					Categorías</h2>
 				<div class="flex gap-2">
-					<button onclick="abrirModalAgregarCategoria()"
-						class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700
+					<button onclick="abrirModalAgregarCategoria()" class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700
                                text-white text-sm font-semibold rounded-xl transition">
 						<i class="fa-solid fa-plus"></i> Nueva
 					</button>
-					<button onclick="cerrarModalCategoria()"
-						class="text-slate-400 hover:text-slate-600 ml-2">
+					<button onclick="cerrarModalCategoria()" class="text-slate-400 hover:text-slate-600 ml-2">
 						<i class="fa-solid fa-xmark text-xl"></i>
 					</button>
 				</div>
@@ -436,25 +241,20 @@
 
 			<table class="w-full text-sm mb-6">
 				<thead class="bg-slate-50 border-b border-slate-100">
-					<tr
-						class="text-left text-xs uppercase tracking-wide text-slate-400">
+					<tr class="text-left text-xs uppercase tracking-wide text-slate-400">
 						<th class="px-4 py-3">Categoría</th>
 						<th class="px-4 py-3">Descripción</th>
 						<th class="px-4 py-3">Acciones</th>
 					</tr>
 				</thead>
 				<tbody class="divide-y divide-slate-50">
-					<tr th:each="cat : ${categorias}"
-						class="hover:bg-slate-50 transition">
-						<td class="px-4 py-3 font-semibold text-slate-700"
-							th:text="${cat.nombre}">—</td>
+					<tr th:each="cat : ${categorias}" class="hover:bg-slate-50 transition">
+						<td class="px-4 py-3 font-semibold text-slate-700" th:text="${cat.nombre}">—</td>
 						<td class="px-4 py-3 text-slate-500" th:text="${cat.descripcion}">—</td>
 						<td class="px-4 py-3">
 							<div class="flex gap-2">
-								<button type="button" th:data-idcat="${cat.id}"
-									th:data-nombrecat="${cat.nombre}"
-									th:data-desc="${cat.descripcion}"
-									onclick="abrirModalEditarCategoria(this)"
+								<button type="button" th:data-idcat="${cat.id}" th:data-nombrecat="${cat.nombre}"
+									th:data-desc="${cat.descripcion}" onclick="abrirModalEditarCategoria(this)"
 									class="text-xs font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition">
 									<i class="fa-solid fa-pen mr-1"></i> Editar
 								</button>
@@ -472,25 +272,22 @@
 			<!-- Sub-modal guardar categoria -->
 			<div id="modalGuardarCategoria" style="display: none;"
 				class="bg-slate-50 rounded-xl p-5 border border-slate-200">
-				<h3 class="text-sm font-bold text-slate-700 mb-4"
-					id="tituloCategoriaForm">Nueva Categoría</h3>
-				<form method="post" th:object="${categoriaDTO}"
-					th:action="@{/admin/platos/categoria/guardar}" class="space-y-3">
+				<h3 class="text-sm font-bold text-slate-700 mb-4" id="tituloCategoriaForm">Nueva Categoría</h3>
+				<form method="post" th:object="${categoriaDTO}" th:action="@{/admin/platos/categoria/guardar}"
+					class="space-y-3">
 					<input type="hidden" th:field="*{id}" id="idcategoria" />
 					<div>
 						<label class="text-xs font-medium text-slate-600 block mb-1">Nombre</label>
-						<input th:field="*{nombre}" type="text" id="categoria"
-							class="input-field" placeholder="Ej: Entradas" required>
+						<input th:field="*{nombre}" type="text" id="categoria" class="input-field"
+							placeholder="Ej: Entradas" required>
 					</div>
 					<div>
 						<label class="text-xs font-medium text-slate-600 block mb-1">Descripción</label>
-						<input th:field="*{descripcion}" type="text"
-							id="categoriaDescripcion" class="input-field"
+						<input th:field="*{descripcion}" type="text" id="categoriaDescripcion" class="input-field"
 							placeholder="Ej: Platos para comenzar" required>
 					</div>
 					<div class="flex gap-2 pt-1">
-						<button type="button" onclick="cerrarModalEditarCategoria()"
-							class="btn-ghost">Cancelar</button>
+						<button type="button" onclick="cerrarModalEditarCategoria()" class="btn-ghost">Cancelar</button>
 						<button type="submit" class="btn-primary">
 							<i class="fa-solid fa-floppy-disk mr-1"></i> Guardar
 						</button>
@@ -505,8 +302,7 @@
 					<i class="fa-solid fa-triangle-exclamation mr-1"></i> ¿Eliminar
 					esta categoría?
 				</p>
-				<form method="post" th:object="${platoDTO}"
-					th:action="@{/admin/platos/categoria/eliminar}">
+				<form method="post" th:object="${platoDTO}" th:action="@{/admin/platos/categoria/eliminar}">
 					<input type="hidden" th:field="*{id}" id="categoriaEliminar" />
 					<div class="flex gap-2">
 						<button type="button" onclick="cerrarModalEliminarCategoria()"
@@ -517,140 +313,6 @@
 			</div>
 		</div>
 	</div>
-
-	<script>
-    // ── Preview de imagen al seleccionar archivo ──────────────
-// ── Preview de imagen al seleccionar archivo ──────────────
-const inputFile = document.getElementById('imagenFile');
-const uploadArea = document.getElementById('uploadArea');
-
-inputFile.addEventListener('change', function() {
-    mostrarPreview(this.files[0]);
-});
-
-// Drag & drop
-uploadArea.addEventListener('dragover', function(e) {
-    e.preventDefault();
-    this.style.borderColor = '#6366f1';
-    this.style.background  = '#f5f3ff';
-});
-uploadArea.addEventListener('dragleave', function() {
-    this.style.borderColor = '';
-    this.style.background  = '';
-});
-uploadArea.addEventListener('drop', function(e) {
-    e.preventDefault();
-    this.style.borderColor = '';
-    this.style.background  = '';
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-        inputFile.files = e.dataTransfer.files;
-        mostrarPreview(file);
-    }
-});
-
-function mostrarPreview(file) {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const preview = document.getElementById('imgNuevaPreview');
-        const holder  = document.getElementById('uploadPlaceholder');
-        preview.src   = e.target.result;
-        preview.classList.remove('hidden');
-        holder.classList.add('hidden');
-        document.getElementById('uploadArea').classList.add('has-image');
-    };
-    reader.readAsDataURL(file);
-}
-
-    // ── Modal plato: Agregar ──────────────────────────────────
-    function abrirModalAgregar() {
-        document.getElementById('modalGuardarTitulo').textContent = 'Agregar plato';
-        document.getElementById('idplato').value        = '';
-        document.getElementById('platoNombre').value    = '';
-        document.getElementById('platoPrecio').value    = '';
-        document.getElementById('imagenUrlActual').value = '';
-        document.getElementById('categorias').value     = '';
-        resetUploadArea();
-        document.getElementById('previewActual').classList.add('hidden');
-        document.getElementById('modalGuardar').classList.add('open');
-    }
-
-    // ── Modal plato: Editar ───────────────────────────────────
-    function abrirModalEditar(btn) {
-        document.getElementById('modalGuardarTitulo').textContent = 'Editar plato';
-        document.getElementById('idplato').value         = btn.dataset.id;
-        document.getElementById('platoNombre').value     = btn.dataset.nombre;
-        document.getElementById('platoPrecio').value     = btn.dataset.precio;
-        document.getElementById('categorias').value      = btn.dataset.idcategoria;
-        document.getElementById('imagenUrlActual').value = btn.dataset.imgurl || '';
-
-        // Mostrar imagen actual si existe
-        const imgUrl = btn.dataset.imgurl;
-        if (imgUrl && imgUrl.trim() !== '' && imgUrl !== 'null') {
-            document.getElementById('imgActualPreview').src = imgUrl;
-            document.getElementById('previewActual').classList.remove('hidden');
-        } else {
-            document.getElementById('previewActual').classList.add('hidden');
-        }
-
-        resetUploadArea();
-        document.getElementById('modalGuardar').classList.add('open');
-    }
-
-    function cerrarModalEditar() {
-        document.getElementById('modalGuardar').classList.remove('open');
-    }
-
-    // ── Reset area de carga ───────────────────────────────────
-    function resetUploadArea() {
-        document.getElementById('imagenFile').value = '';
-        document.getElementById('imgNuevaPreview').classList.add('hidden');
-        document.getElementById('imgNuevaPreview').src = '';
-        document.getElementById('uploadPlaceholder').classList.remove('hidden');
-        document.getElementById('uploadArea').classList.remove('has-image');
-    }
-
-    // ── Modal eliminar plato ──────────────────────────────────
-    function abrirModalEliminar(btn) {
-        document.getElementById('platoEliminar').value = btn.dataset.id;
-        document.getElementById('modalEliminar').classList.add('open');
-    }
-    function cerrarModalEliminar() {
-        document.getElementById('modalEliminar').classList.remove('open');
-    }
-
-    // ── Modal categorias ──────────────────────────────────────
-    function abrirModalCategoria()  { document.getElementById('modalCategoria').classList.add('open'); }
-    function cerrarModalCategoria() {
-        document.getElementById('modalCategoria').classList.remove('open');
-        cerrarModalEditarCategoria();
-        cerrarModalEliminarCategoria();
-    }
-    function abrirModalAgregarCategoria() {
-        document.getElementById('tituloCategoriaForm').textContent = 'Nueva Categoría';
-        document.getElementById('idcategoria').value = '';
-        document.getElementById('categoria').value = '';
-        document.getElementById('categoriaDescripcion').value = '';
-        document.getElementById('modalGuardarCategoria').style.display = 'block';
-        document.getElementById('modalEliminarCategoria').style.display = 'none';
-    }
-    function abrirModalEditarCategoria(btn) {
-        document.getElementById('tituloCategoriaForm').textContent = 'Editar Categoría';
-        document.getElementById('idcategoria').value = btn.dataset.idcat;
-        document.getElementById('categoria').value   = btn.dataset.nombrecat;
-        document.getElementById('categoriaDescripcion').value = btn.dataset.desc;
-        document.getElementById('modalGuardarCategoria').style.display = 'block';
-        document.getElementById('modalEliminarCategoria').style.display = 'none';
-    }
-    function cerrarModalEditarCategoria()    { document.getElementById('modalGuardarCategoria').style.display = 'none'; }
-    function abrirModalEliminarCategoria(btn) {
-        document.getElementById('categoriaEliminar').value = btn.dataset.idcat;
-        document.getElementById('modalEliminarCategoria').style.display = 'block';
-        document.getElementById('modalGuardarCategoria').style.display = 'none';
-    }
-    function cerrarModalEliminarCategoria() { document.getElementById('modalEliminarCategoria').style.display = 'none'; }
-</script>
-
+	<script th:src="@{/js/dashboard/platos.js}"></script>
 </body>
 </html>

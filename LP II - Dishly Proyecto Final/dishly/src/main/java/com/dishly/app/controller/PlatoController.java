@@ -64,7 +64,7 @@ public class PlatoController {
             // Subieron imagen nueva — guardar en disco
             String nombreArchivo = guardarImagen(imagenFile);
             if (nombreArchivo != null) {
-            	plato.setImagen("/img/" + nombreArchivo);
+            	plato.setImagen(nombreArchivo);
             }
         } else if (platoDTO.getImagenUrl() != null && !platoDTO.getImagenUrl().isBlank()) {
             // Sin imagen nueva — conservar la existente

@@ -9,19 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        * { font-family: 'DM Sans', sans-serif; }
-        .font-display { font-family: 'Syne', sans-serif; }
-        .sidebar { background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); }
-        .nav-link { transition: all 0.2s; border-radius: 12px; color: #94a3b8; }
-        .nav-link:hover, .nav-link.active { background: rgba(99,102,241,0.15); color: #fff; }
-        .nav-link.active { background: rgba(99,102,241,0.2); border-left: 3px solid #6366f1; }
-        .card { background:#fff; border-radius:20px; border:1px solid #f1f5f9; box-shadow:0 2px 12px rgba(0,0,0,0.04); }
-        .badge-pill { font-size:11px; padding:3px 12px; border-radius:999px; font-weight:600; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/reportes.css}">
 </head>
 <body class="bg-slate-50 min-h-screen flex">
 
@@ -115,62 +103,64 @@
             </div>
         </div>
     </div>
-
 </main>
 
 <script th:inline="javascript">
-    const meses      = /*[[${mesesLabels}]]*/  ['Ene','Feb','Mar','Abr','May','Jun'];
-    const ventas     = /*[[${ventasPorMes}]]*/ [0,0,0,0,0,0];
-    const pagoLabels = /*[[${pagoLabels}]]*/   ['EFECTIVO','TARJETA','YAPE'];
-    const pagoCounts = /*[[${pagoCounts}]]*/   [0,0,0];
+    const meses = /*[[${mesesLabels}]]*/['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'];
+const ventas = /*[[${ventasPorMes}]]*/[0, 0, 0, 0, 0, 0];
+const pagoLabels = /*[[${pagoLabels}]]*/['EFECTIVO', 'TARJETA', 'YAPE'];
+const pagoCounts = /*[[${pagoCounts}]]*/[0, 0, 0];
 
-    // Ventas por mes
-    new Chart(document.getElementById('chartVentasMes'), {
-        type: 'bar',
-        data: {
-            labels: meses,
-            datasets: [{
-                label: 'Ventas (S/)',
-                data: ventas,
-                backgroundColor: 'rgba(99,102,241,0.15)',
-                borderColor: '#6366f1',
-                borderWidth: 2,
-                borderRadius: 8,
-            }]
+// Ventas por mes
+new Chart(document.getElementById('chartVentasMes'), {
+    type: 'bar',
+    data: {
+        labels: meses,
+        datasets: [{
+            label: 'Ventas (S/)',
+            data: ventas,
+            backgroundColor: 'rgba(99,102,241,0.15)',
+            borderColor: '#6366f1',
+            borderWidth: 2,
+            borderRadius: 8,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => ' S/ ' + ctx.parsed.y.toFixed(2) } }
         },
-        options: {
-            responsive: true,
-            plugins: { legend: { display: false },
-                tooltip: { callbacks: { label: ctx => ' S/ ' + ctx.parsed.y.toFixed(2) }}
+        scales: {
+            y: {
+                beginAtZero: true, grid: { color: '#f1f5f9' },
+                ticks: { callback: v => 'S/ ' + v, font: { size: 11 } }
             },
-            scales: {
-                y: { beginAtZero: true, grid: { color: '#f1f5f9' },
-                     ticks: { callback: v => 'S/ ' + v, font: { size: 11 } }},
-                x: { grid: { display: false }, ticks: { font: { size: 11 } }}
-            }
+            x: { grid: { display: false }, ticks: { font: { size: 11 } } }
         }
-    });
+    }
+});
 
-    // Método de pago
-    new Chart(document.getElementById('chartMetodoPago'), {
-        type: 'doughnut',
-        data: {
-            labels: pagoLabels,
-            datasets: [{
-                data: pagoCounts,
-                backgroundColor: ['#6366f1','#0ea5e9','#10b981'],
-                borderWidth: 0,
-                hoverOffset: 6
-            }]
-        },
-        options: {
-            cutout: '65%',
-            responsive: true,
-            plugins: {
-                legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 16 }}
-            }
+// Método de pago
+new Chart(document.getElementById('chartMetodoPago'), {
+    type: 'doughnut',
+    data: {
+        labels: pagoLabels,
+        datasets: [{
+            data: pagoCounts,
+            backgroundColor: ['#6366f1', '#0ea5e9', '#10b981'],
+            borderWidth: 0,
+            hoverOffset: 6
+        }]
+    },
+    options: {
+        cutout: '65%',
+        responsive: true,
+        plugins: {
+            legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 16 } }
         }
-    });
+    }
+});
 </script>
 </body>
 </html>
