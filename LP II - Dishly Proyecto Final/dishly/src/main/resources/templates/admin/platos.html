@@ -26,7 +26,7 @@
 		<div class="flex items-center justify-between mb-8">
 			<div>
 				<h1 class="text-2xl font-bold text-slate-800">Platos</h1>
-				<p class="text-sm text-slate-400 mt-1">Gestioná el menú de la
+				<p class="text-sm text-slate-400 mt-1">Gestiona el menú de la
 					plataforma</p>
 			</div>
 			<div class="flex gap-3">
@@ -104,9 +104,10 @@
                                                bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition">
 										<i class="fa-solid fa-pen mr-1"></i> Editar
 									</button>
-									<button type="button" th:data-id="${plato.id}" onclick="abrirModalEliminar(this)"
+									<button type="button" th:attr="data-id=${plato.id}"
+										onclick="abrirModalEliminar(this)"
 										class="text-xs font-medium text-red-500 hover:text-red-700
-                                               bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition">
+               									bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition">
 										<i class="fa-solid fa-trash-can mr-1"></i> Eliminar
 									</button>
 								</div>
@@ -161,7 +162,7 @@
 				<div>
 					<label class="text-sm font-medium text-slate-700 block mb-1">Categoría</label>
 					<select th:field="*{idCategoria}" id="categorias" class="input-field" required>
-						<option value="">Seleccioná una categoría</option>
+						<option value="">Selecciona una categoría</option>
 						<option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}"></option>
 					</select>
 				</div>

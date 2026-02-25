@@ -107,9 +107,9 @@
 
 <script th:inline="javascript">
     const meses = /*[[${mesesLabels}]]*/['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'];
-const ventas = /*[[${ventasPorMes}]]*/[0, 0, 0, 0, 0, 0];
-const pagoLabels = /*[[${pagoLabels}]]*/['EFECTIVO', 'TARJETA', 'YAPE'];
-const pagoCounts = /*[[${pagoCounts}]]*/[0, 0, 0];
+	const ventas = /*[[${ventasPorMes}]]*/[0, 0, 0, 0, 0, 0];
+	const pagoLabels = /*[[${pagoLabels}]]*/['EFECTIVO', 'TARJETA', 'YAPE'];
+	const pagoCounts = /*[[${pagoCounts}]]*/[0, 0, 0];
 
 // Ventas por mes
 new Chart(document.getElementById('chartVentasMes'), {
