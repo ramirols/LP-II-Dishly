@@ -204,16 +204,16 @@
         </div>
 
         <!-- Gráfico estado pedidos -->
-        <div class="chart-card p-6 xl:col-span-2">
+        <div class="chart-card p-6 xl:col-span-2 flex flex-col">
             <div class="flex items-center justify-between mb-5">
                 <div>
                     <h2 class="font-semibold text-slate-800">Estado de pedidos</h2>
                     <p class="text-xs text-slate-400">Distribución general</p>
                 </div>
             </div>
-            <div class="flex items-center justify-center">
-                <canvas id="chartEstados" width="200" height="200"></canvas>
-            </div>
+			<div class="flex-1 flex items-center justify-center min-h-0">
+			    <canvas id="chartEstados"></canvas>
+			</div>
             <div class="flex justify-center gap-4 mt-4 text-xs text-slate-500">
                 <span class="flex items-center gap-1">
                     <span class="status-dot bg-green-400"></span> Completados
@@ -355,7 +355,8 @@
         },
         options: {
             cutout: '68%',
-            responsive: false,
+            responsive: true,
+            maintainAspectRatio: true,
             plugins: {
                 legend: { display: false }
             }
