@@ -89,3 +89,59 @@ function resetUploadArea() {
     document.getElementById('uploadPlaceholder').classList.remove('hidden');
     document.getElementById('uploadArea').classList.remove('has-image');
 }
+
+/* --- MODAL ELIMINAR PLATO --- */
+function abrirModalEliminar(btn) {
+    // Obtenemos el ID del atributo data-id del botón
+    const id = btn.getAttribute('data-id'); 
+    document.getElementById("platoEliminar").value = id;
+    document.getElementById("modalEliminar").style.display = "flex";
+}
+
+function cerrarModalEliminar() {
+    document.getElementById("modalEliminar").style.display = "none";
+}
+
+function filtrarPlatos() {
+    const input = document.getElementById("inputBusqueda");
+    const filter = input.value.toLowerCase();
+    const table = document.querySelector("table tbody");
+    const tr = table.getElementsByTagName("tr");
+
+    for (let i = 0; i < tr.length; i++) {
+        const td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+            const txtValue = td.textContent || td.innerText;
+            if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+
+
+const precioInput = document.getElementById('platoPrecio');
+
+
+precioInput.addEventListener('keydown', function(e) {
+    if (e.key === '-' || e.key === 'e') {
+        e.preventDefault();
+    }
+});
+
+precioInput.addEventListener('input', function() {
+    if (this.value < 0) {
+        this.value = 0;
+    }
+});
+
+document.querySelector('#modalGuardar form').addEventListener('submit', function(e) {
+    const valor = parseFloat(precioInput.value);
+    if (valor < 0 || isNaN(valor)) {
+        e.preventDefault();
+        alert("Por favor, ingrese un precio válido (no negativo).");
+        precioInput.focus();
+    }
+});

@@ -23,6 +23,15 @@
     <div class="mb-8">
         <h1 class="text-2xl font-bold text-slate-800">Pedidos</h1>
         <p class="text-sm text-slate-400 mt-1">Gestiona y actualiza el estado de todos los pedidos</p>
+		
+		<div class="relative w-[250px]">
+		    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+		        <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
+		    </div>
+		    <input type="text" id="inputBusqueda" onkeyup="filtrarPedidos()" 
+		           class="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl bg-white placeholder-slate-400 focus:outline-none  transition text-sm shadow-sm" 
+		           placeholder="Buscar por ID, cliente, email, fecha o dirección...">
+		</div>
     </div>
 
     <!-- Alertas -->
@@ -144,6 +153,6 @@
         </div>
     </div>
 </main>
-
+<script th:src="@{/js/pedidos.js}"></script>
 </body>
 </html>
