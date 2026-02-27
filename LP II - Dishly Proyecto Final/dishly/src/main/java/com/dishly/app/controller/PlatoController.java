@@ -75,10 +75,14 @@ public class PlatoController {
         return "redirect:/admin/platos/inicio?platoGuardado";
     }
 
-    // ── Eliminar ─────────────────────────────────────────
+    // ── "Eliminar" (Borrado Lógico) ─────────────────────────
     @PostMapping("/eliminar")
     public String eliminarPlato(@ModelAttribute PlatoDTO platoDTO) {
-        platoService.eliminarPlatoPorId(platoDTO.getId());
+    Plato plato = platoService.buscarPlatoPorId(platoDTO.getId());
+    if (plato != null) {
+        plato.setEstado(false); // Cambiamos a inactivo en lugar de borrar
+        platoService.guardarPlato(plato);
+    }
         return "redirect:/admin/platos/inicio?platoEliminado";
     }
 
